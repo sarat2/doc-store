@@ -29,24 +29,25 @@ router.post('/upload', (req, res) => {
       var chunk = file.read(5);
       if (!chunk)
         return file.once('readable', readFirstBytes);
-      var type = fileType(chunk);
-      if (type.ext === 'jpg' || type.ext === 'png' || type.ext === 'gif') {
-        const blobStream = blobSvc.createWriteStreamToBlockBlob(
-          storageName,
-          blobName,
-          function (error) {
+      // var type = fileType(chunk);
+      // if (type.ext === 'jpg' || type.ext === 'png' || type.ext === 'gif') {
+        const blobStream = blobService.createWriteStreamToBlockBlob("docs", filename,
+          function (error, response) {
             if (error)
               console.log('blob upload error', error);
-            else
+            else {
               console.log('blob upload complete');
+              console.log(JSON.stringify(response, null, 4));
+            }
+              
           }
         );
         file.unshift(chunk);
         file.pipe(blobStream);
-      } else {
-        console.error('Rejected file of type ' + type);
-        file.resume(); // Drain file stream to continue processing form
-      }
+      // } else {
+      //   console.error('Rejected file of type ' + type);
+      //   file.resume(); // Drain file stream to continue processing form
+      // }
     }
 
     readFirstBytes();
