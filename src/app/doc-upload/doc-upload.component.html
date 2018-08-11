@@ -1,6 +1,6 @@
 <div class="container">
-    <div class="col-md-12 px-0">
-        <h4 class="mb-4">New Document</h4>
+    <div class="col-md-12 px-0 pb-5">
+        <h4>New Document</h4>
         <hr class="mb-4">
         <div class="form-group row">
             <label for="application" class="col-sm-2 col-form-label">Application</label>
@@ -18,13 +18,37 @@
             <div class="col-md-8 order-md-1  px-0">
                 <div class="row">
                     <div class="form-group col-md-10 mb-3">
+                        <label for="appKey">AppKey #</label>
+                        <input type="text" class="form-control" id="appKey" placeholder="Enter app uniqueid for the entity" formControlName="appKey">
+                        <div class="invalid-feedback">
+                            Enter a uniqueid for the entity.
+                        </div>
+                    </div>
+                    <div class="form-group col-md-6 mb-3">
+                        <label for="category">Category</label>
+                        <select class="custom-select d-block w-100" id="category" formControlName="category">
+                            <option value="">Select...</option>
+                            <option value="Proposal">Proposal</option>
+                            <option value="Bids">Bids</option>
+                            <option value="Award">Awards</option>
+                        </select>
+                    </div>
+                    <div class="form-group col-md-6 mb-3">
+                        <label for="subCategory">Sub-Category</label>
+                        <select class="custom-select d-block w-100" id="subCategory" formControlName="subCategory">
+                            <option value="">Select...</option>
+                            <option value="ChangeOrder">Change Orders</option>
+                            <option value="Supporting">Supporting</option>
+                        </select>
+                    </div>
+                    <div class="form-group col-md-6 mb-3">
                         <label for="contractNo">Contract #</label>
                         <input type="text" class="form-control" id="contractNo" placeholder="Enter Contract #" formControlName="contractNo">
                         <div class="invalid-feedback">
                             Enter a valid Contract #.
                         </div>
                     </div>
-                    <div class="form-group col-md-10 mb-3">
+                    <div class="form-group col-md-6 mb-3">
                         <label for="fmsRegNo">FMS Registration #</label>
                         <input type="text" class="form-control" id="fmsRegNo" placeholder="Enter FMS Registration #" formControlName="fmsRegNo">
                         <div class="invalid-feedback">
@@ -51,15 +75,11 @@
 
                         <div class="input-group">
 
-                            <input type="text" class="form-control" id="document" placeholder="Document Name" formControlName="document">
+                            <input type="text" class="form-control" id="document" placeholder="Document Name" formControlName="documentName">
                             <div class="input-group-prepend">
                                 <input type="file" style="display: none;" class="form-control" id="document" (change)="onFileSelected($event)" #fileInput>
                                 <button type="button" class="btn btn-outline-primary btn-md" (click)="fileInput.click()">Choose File</button>
                             </div>
-                        </div>
-
-                        <div class="invalid-feedback">
-                            Enter a valid Contract End Date.
                         </div>
                     </div>
 
@@ -67,49 +87,23 @@
                 </div>
             </div>
             <hr class="mb-4">
-            {{ metadata.value | json }}
+            <div class="col-md-12 px-0">
+                {{ metadata.value | json }}
+            </div>
             <button class="btn btn-primary btn-md" type="submit" [disabled]="metadata.invalid">Upload</button>
-            <div class="col-md-8 order-md-1  px-0">
-                <div class="row">
-
+            <button class="btn btn-secondary-light btn-md ml-2" type="button" [routerLink]="['/search']">Cancel</button>
+            {{ progress || '' }}
+            <div class="mt-3" *ngIf="success">
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    <strong>Success!</strong> Your document is saved successfully!!
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
                 </div>
             </div>
+
+
         </form>
 
     </div>
 </div>
-
-<!-- <form novalidate (ngSubmit)="onSubmit(metadata)" [formGroup]="metadata">
-    <div>
-        <label>
-            <span>Full name</span>
-            <input type="text" class="input" formControlName="appName">
-        </label>
-        <label>
-            <span>Event title</span>
-            <input type="text" class="input" formControlName="contractNumber">
-        </label>
-        <label>
-            <span>Event location</span>
-            <input type="text" class="input" formControlName="fmsDocID">
-        </label>
-        <label>
-            <span>Event location</span>
-            <input type="text" class="input" formControlName="document">
-        </label>
-        <label>
-            <span>Event location</span>
-            <input type="text" class="input" formControlName="startDate">
-        </label>
-        <label>
-            <span>Event location</span>
-            <input type="text" class="input" formControlName="endDate">
-        </label>
-        {{ metadata.value | json }}
-    </div>
-    <div>
-        <button type="submit" [disabled]="metadata.invalid">
-            Submit
-        </button>
-    </div>
-</form> -->
