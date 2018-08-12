@@ -35,7 +35,7 @@ export class DocSearchComponent implements OnInit {
     console.log(c);
     console.log(p);
     console.log(n);
-    return this.http.get('http://localhost:4200/api/download?c=' + c + '&p=' + p, { responseType: 'blob' }).subscribe(res => {
+    return this.http.get('/api/download?c=' + c + '&p=' + p, { responseType: 'blob' }).subscribe(res => {
       console.log('start download:', res);
       const url = window.URL.createObjectURL(res);
       const a = document.createElement('a');
