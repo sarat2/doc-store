@@ -35,13 +35,13 @@ export class DocUploadComponent implements OnInit {
       endDate: new FormControl(this.formatShortDate(new Date('06/30/2019')), [Validators.required]),
       category: new FormControl('', [Validators.required]),
       subCategory: new FormControl('', []),
-      documentName: new FormControl('', [Validators.required])
+      docName: new FormControl('', [Validators.required])
     });
   }
 
   onFileSelected(event) {
     this.selectedFile = <File>event.target.files[0];
-    this.metadata.controls['documentName'].setValue(this.selectedFile.name);
+    this.metadata.controls['docName'].setValue(this.selectedFile.name);
     this.success = false;
     this.progress = null;
   }
@@ -51,20 +51,15 @@ export class DocUploadComponent implements OnInit {
     if (this.metadata.value.subCategory !== '') {
       fn += this.metadata.value.subCategory + '\\';
     }
-    return fn + this.metadata.value.documentName;
+    return fn + this.metadata.value.docName;
   }
 
   onSubmit() {
     const fd = new FormData();
     fd.append('metadata', JSON.stringify(this.metadata.value));
-    fd.append('file', this.selectedFile, this.metadata.value.documentName);
+    fd.append('file', this.selectedFile, this.metadata.value.docName);
 
-    // no need to set headers explicitly
-    // const headers = new HttpHeaders();
-    // headers.set('Accept', 'application/json');
-    // headers.set('Content-Disposition', 'form-data');
-
-    this.http.post('/api/upload', fd, { reportProgress: true, observe: 'events' }).subscribe(event => {
+    this.http.post('/api/document/upload', fd, { reportProgress: true, observe: 'events' }).subscribe(event => {
       if (event.type === HttpEventType.UploadProgress) {
         const p = Math.round(event.loaded / event.total * 100);
         this.progress = p + '%' + ((p === 100) ? ' - COMPLETED' : '');

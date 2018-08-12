@@ -4,22 +4,19 @@
       <h1 class="display-6 font-italic">Search Document(s)</h1>
       <div class="input-group mb-3">
         <div class="input-group-prepend">
-          <button class="btn btn-primary dropdown-toggle btn-block" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{appName || "Select Application"}}</button>
+          <button class="btn btn-primary dropdown-toggle btn-block" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{ (appName | titlecase) || "Select Application"}}</button>
           <div class="dropdown-menu">
-            <a class="dropdown-item" (click)="appName = 'Contracts';">Contracts</a>
-            <a class="dropdown-item" (click)="appName = 'Payments';">Payments</a>
+            <a class="dropdown-item" (click)="appName = 'contracts';">Contracts</a>
+            <a class="dropdown-item" (click)="appName = 'payments';">Payments</a>
             <div role="separator" class="dropdown-divider"></div>
-            <a class="dropdown-item" (click)="appName = 'Designs';">Designs</a>
+            <a class="dropdown-item" (click)="appName = 'designs';">Designs</a>
             <div role="separator" class="dropdown-divider"></div>
-            <a class="dropdown-item" (click)="appName = 'Audio';">Audio</a>
-            <a class="dropdown-item" (click)="appName = 'Video';">Video</a>
+            <a class="dropdown-item" (click)="appName = 'audio';">Audio</a>
+            <a class="dropdown-item" (click)="appName = 'video';">Video</a>
           </div>
         </div>
         <input type="text" #searchtext (keyup)="search(searchtext.value)" class="form-control font-italic" aria-label="Text input with dropdown button"
           placeholder="start typing..." />
-
-
-
       </div>
       <!-- <p class="lead my-3">Multiple lines of text that form the lede, informing new readers quickly and efficiently about what's most interesting
         in this post's contents.</p>
@@ -29,45 +26,57 @@
     </div>
   </div>
 
-  <div class="col-md-12 px-0">
-    <div class="col-md-2 px-0"></div>
-    <div *ngIf="result" class="col-md-10 px-0">
-      <!-- {{ result | json }} -->
-      <table class="table table-hover table-striped table-sm">
-        <caption>Document results for - {{ appName }} / {{ '{' + searchtext.value + '}' }}</caption>
-        <thead>
-          <tr>
-            <th scope="col">#</th>
-            <th scope="col">AppKey#</th>
-            <th scope="col">Contract#</th>
-            <th scope="col">FMS Reg#</th>
-            <th scope="col">Start Date</th>
-            <th scope="col">End Date</th>
-            <th scope="col">Category/Sub-Category</th>
-            <th scope="col">Document Name</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let row of result.value; let i = index">
-            <th scope="row">{{i+1}}</th>
-            <td>
-              {{row.appKey}}
-            </td>
-            <td>{{row.contractNo}}</td>
-            <td>{{row.fmsRegNo}}</td>
-            <td>{{row.startDate}}</td>
-            <td>{{row.endDate}}</td>
-            <td>{{row.category + ' / ' + row.subCategory }}</td>
-            <td><a (click)="onDownload(row.appName, row.docPath, row.documentName)">{{row.documentName}}</a></td>
-            <!-- <td>
+  <div class="col-md-12">
+    <div class="row">
+      <div *ngIf="list" class="col-md-2 px-0">
+        <div class="card">
+          <div class="card-header">Document(s)</div>
+          <div class="card-body">
+            <div class="mb-3" *ngFor='let i of list'>
+                {{i.index | titlecase }}................{{i.count}}
+            </div>
+          </div>
+        </div>
+      </div>
+      <div *ngIf="result" class="col-md-10 px-0 pl-3">
+        <table class="table table-hover table-striped table-sm">
+          <caption>Document results for - {{ appName }} / {{ '{' + searchtext.value + '}' }}</caption>
+          <thead>
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">AppKey#</th>
+              <th scope="col">Category/Sub-Category</th>
+              <th scope="col">Contract#</th>
+              <th scope="col">FMS Reg#</th>
+              <th scope="col">Start Date</th>
+              <th scope="col">End Date</th>
+              <th scope="col">Document Name</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let row of result.value; let i = index">
+              <th scope="row">{{i+1}}</th>
+              <td>{{row.appKey}}</td>
+              <td>{{row.category + ' / ' + row.subCategory }}</td>
+              <td>{{row.contractNo}}</td>
+              <td>{{row.fmsRegNo}}</td>
+              <td>{{row.startDate}}</td>
+              <td>{{row.endDate}}</td>
+
+              <td>
+                <a (click)="onDownload(row.appName, row.docPath, row.documentName)">{{row.documentName}}</a>
+              </td>
+              <!-- <td>
               <fa-icon icon="file-excel"></fa-icon>
               <fa-icon icon="file-word"></fa-icon>
               <fa-icon icon="file-pdf"></fa-icon>
             </td> -->
-          </tr>
-        </tbody>
-      </table>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
+
   </div>
   <!--
   <div class="row mb-2">

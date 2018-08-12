@@ -14,13 +14,75 @@ router.get('/', (req, res) => {
   res.status(200).json({ message: 'api works!!' });
 });
 
-router.get('/download', (req, res) => {
+router.get('/', (req, res) => {
+  console.log('api check')
+  res.status(200).json({ message: 'api works!!' });
+});
+
+router.get('/search/list', (request, response) => {
+
+  var options = {
+    "method": "GET",
+    "hostname": process.env.searchHost,
+    "path": "/indexes?api-version=2017-11-11",
+    "headers": {
+      "content-type": "application/json",
+      "cache-control": "no-cache",
+      "api-key": process.env.searchKey
+    }
+  };
+
+  var req = http.request(options, function (res) {
+    var chunks = [];
+
+    res.on("data", function (chunk) {
+      chunks.push(chunk);
+    });
+
+    res.on("end", function () {
+      var body = JSON.parse(Buffer.concat(chunks));
+      // console.log(body.value);
+      const calls = body.value.map((i) => {
+        return new Promise((resolve, reject) => {
+          var options = {
+            "method": "GET",
+            "hostname": process.env.searchHost,
+            "path": "/indexes/" + i.name + "/docs/$count?api-version=2017-11-11",
+            "headers": {
+              "content-type": "application/json",
+              "cache-control": "no-cache",
+              "api-key": process.env.searchKey
+            }
+          };
+
+          var req = http.request(options, function (res) {
+            var chunks = [];
+            res.on("data", function (chunk) {
+              chunks.push(chunk);
+            });
+            res.on("end", function () {
+              resolve({ 'index': i.name, 'count': chunks.toString().trim() });
+            });
+          });
+          req.end();
+        })
+      });
+
+      Promise.all(calls).then((data) => {
+        response.status(200).json(data);
+      });
+    });
+  });
+  req.end();  
+});
+
+router.get('/document/download', (req, res) => {
   var container = req.query.c.toLowerCase();
   var docPath = req.query.p;
 
   // var container = req.params.c.toLowerCase();
   // var docPath = req.params.p;
-  
+
   var fileName = path.parse(docPath).base;
   console.log(container);
   console.log(docPath);
@@ -35,22 +97,24 @@ router.get('/download', (req, res) => {
       } else {
         res.header('Content-Type', properties.contentType);
         res.header('Content-Disposition', 'attachment; filename=' + fileName);
-        // console.log('test')
-        blobService.createReadStream(container, docPath).on('error', function(error){ console.log(error); }).pipe(res);
+        blobService.createReadStream(container, docPath).on('error', function (error) { console.log(error); }).pipe(res);
       }
     });
 });
 
-router.post('/upload', (req, res) => {
+router.post('/document/upload', (req, res) => {
   var busboy = new Busboy({ headers: req.headers });
-  var metadata, uploadedfile;
+  var metadata, appname;
 
   var awaitMetaData = new Promise((resolve, reject) => {
     busboy.on('field', function (fieldname, val, fieldnameTruncated, valTruncated, encoding, mimetype) {
       // console.log('Field [' + fieldname + ']: value: ' + inspect(val));
       if (fieldname === 'metadata') {
         metadata = JSON.parse(val);
-        console.log('retrieved metadata');
+        appname = metadata.appName;
+        delete metadata.appName
+        console.log(appname);
+        // console.log('retrieved metadata');
         resolve();
       }
     });
@@ -72,10 +136,9 @@ router.post('/upload', (req, res) => {
       var chunk = file.read(5);
       if (!chunk)
         return file.once('readable', readFirstBytes);
-      // var type = fileType(chunk);
-      // if (type.ext === 'jpg' || type.ext === 'png' || type.ext === 'gif') {
-      let taxonomy = metadata.appKey + '/' + metadata.category + ((metadata.subCategory !== '') ? '/' + metadata.subCategory + '/' : '/') + filename;
-      const blobStream = blobService.createWriteStreamToBlockBlob(metadata.appName.toLowerCase(), taxonomy,
+
+      let taxonomy = metadata.appKey + '/' + metadata.category + ((metadata.subCategory !== '') ? '/' + metadata.subCategory + '/' : '/') + metadata.docName;
+      const blobStream = blobService.createWriteStreamToBlockBlob(appname, taxonomy,
         function (error, response) {
           if (error)
             console.log('blob upload error', error);
@@ -91,12 +154,12 @@ router.post('/upload', (req, res) => {
 
             var options = {
               "method": "POST",
-              "hostname": "docustore.search.windows.net",
-              "path": "/indexes/docs/docs/index?api-version=2017-11-11",
+              "hostname": process.env.searchHost,
+              "path": "/indexes/" + appname + "/docs/index?api-version=2017-11-11",
               "headers": {
                 "content-type": "application/json",
-                "api-key": process.env.searchKey,
-                "cache-control": "no-cache"
+                "cache-control": "no-cache",
+                "api-key": process.env.searchKey
               }
             };
 
@@ -120,6 +183,8 @@ router.post('/upload', (req, res) => {
       );
       file.unshift(chunk);
       file.pipe(blobStream);
+      // var type = fileType(chunk);
+      // if (type.ext === 'jpg' || type.ext === 'png' || type.ext === 'gif') {
       // } else {
       //   console.error('Rejected file of type ' + type);
       //   file.resume(); // Drain file stream to continue processing form

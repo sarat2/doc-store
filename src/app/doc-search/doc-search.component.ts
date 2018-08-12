@@ -10,19 +10,18 @@ import { String, StringBuilder } from 'typescript-string-operations';
 export class DocSearchComponent implements OnInit {
   // tslint:disable-next-line:max-line-length
   apibase = 'https://docustore.search.windows.net/indexes/{0}/docs?api-version=2017-11-11&api-key=AA139490D4BD46717692A9E0E38AFBF9&queryType=full&search=/.*{1}.*/';
-  appName: string;
-  result: any;
-  headers: HttpHeaders;
+  appName: string; result: any; list:  any;
 
   constructor(private http: HttpClient) {
     this.appName = '';
+    this.getCount();
   }
 
   ngOnInit() { }
 
   search(sq: string): void {
     if (sq.length > 3) {
-      const url = String.Format(this.apibase, 'docs', sq);
+      const url = String.Format(this.apibase, this.appName, sq);
       this.http.get(url).subscribe(data => {
         this.result = data;
       });
@@ -31,12 +30,16 @@ export class DocSearchComponent implements OnInit {
     }
   }
 
+  getCount() {
+    this.http.get('/api/search/list').subscribe(data => {
+      this.list = data;
+    });
+  }
+
   onDownload(c: string, p: string, n: string) {
-    console.log(c);
-    console.log(p);
-    console.log(n);
-    return this.http.get('/api/download?c=' + c + '&p=' + p, { responseType: 'blob' }).subscribe(res => {
-      console.log('start download:', res);
+    console.log('container - {$c},\npath - {$p},\nfilename - {$n}');
+    return this.http.get('/api/document/download?c=' + c + '&p=' + p, { responseType: 'blob' }).subscribe(res => {
+      // console.log('start download:', res);
       const url = window.URL.createObjectURL(res);
       const a = document.createElement('a');
       document.body.appendChild(a);
@@ -51,10 +54,8 @@ export class DocSearchComponent implements OnInit {
     }, () => {
       console.log('Completed file download.');
     });
-
-    //   const fileURL = URL.createObjectURL(new Blob([data], { type: 'application/octet-stream' }));
-    //   window.open(fileURL, n);
-    // });
   }
+
+
 
 }

@@ -7,9 +7,11 @@
             <div class="col-sm-4">
                 <select class="custom-select d-block w-100" id="drpApp" (change)="onAppChange($event)">
                     <option value="">Select...</option>
-                    <option value="Contracts">Contracts</option>
-                    <option value="Payments">Payments</option>
-                    <option value="Designs">Designs</option>
+                    <option value="contracts">Contracts</option>
+                    <option value="payments">Payments</option>
+                    <option value="designs">Designs</option>
+                    <option value="audio">Audio</option>
+                    <option value="video">Video</option>
                 </select>
             </div>
         </div>
@@ -75,7 +77,7 @@
 
                         <div class="input-group">
 
-                            <input type="text" class="form-control" id="document" placeholder="Document Name" formControlName="documentName">
+                            <input type="text" class="form-control" id="document" placeholder="Document Name" formControlName="docName">
                             <div class="input-group-prepend">
                                 <input type="file" style="display: none;" class="form-control" id="document" (change)="onFileSelected($event)" #fileInput>
                                 <button type="button" class="btn btn-outline-primary btn-md" (click)="fileInput.click()">Choose File</button>
@@ -87,9 +89,9 @@
                 </div>
             </div>
             <hr class="mb-4">
-            <!-- <div class="col-md-12 px-0">
+            <div class="col-md-12 px-0">
                 {{ metadata.value | json }}
-            </div> -->
+            </div>
             <button class="btn btn-primary btn-md" type="submit" [disabled]="metadata.invalid">Upload</button>
             <button class="btn btn-secondary-light btn-md ml-2" type="button" [routerLink]="['/search']">Cancel</button>
             {{ progress || '' }}
@@ -101,7 +103,6 @@
                     </button>
                 </div>
             </div>
-
 
         </form>
 
