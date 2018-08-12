@@ -129,8 +129,6 @@ router.post('/upload', (req, res) => {
     awaitMetaData.then(readFirstBytes);
   });
 
-
-
   busboy.on('finish', function () {
     console.log('finish');
     res.writeHead(200, { 'Connection': 'close' });
@@ -141,39 +139,3 @@ router.post('/upload', (req, res) => {
 });
 
 module.exports = router;
-
-
-
-/*
-var request = require("request");
-
-var options = { method: 'POST',
-  url: 'https://docustore.search.windows.net/indexes/docs/docs/index',
-  qs: { 'api-version': '2017-11-11' },
-  headers: 
-   { 'postman-token': '37ed7622-cc01-7f5e-b8fb-55c5deed1c8d',
-     'cache-control': 'no-cache',
-     'api-key': 'CB4664734B38E6542A1306216AC8D929',
-     'content-type': 'application/json' },
-  body: 
-   { value: 
-      [ { '@search.action': 'upload',
-          id: '3dc43e10-9d91-11e8-9787-c398b547b7b2',
-          appName: 'Contracts',
-          appKey: '123456',
-          contractNo: '19AX04567R0A01',
-          fmsRegNo: '2019000001',
-          startDate: '07/01/2018',
-          endDate: '06/30/2019',
-          documentName: 'ExecutedContractCopy.pdf',
-          category: 'Supporting',
-          subCategory: 'Executed',
-          tags: [] } ] },
-  json: true };
-
-request(options, function (error, response, body) {
-  if (error) throw new Error(error);
-
-  console.log(body);
-});
-*/
