@@ -4,11 +4,14 @@ import { RouterModule, Routes } from '@angular/router';
 import { ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 
-
 import { AppComponent } from './app.component';
 import { DocSearchComponent } from './doc-search/doc-search.component';
 import { DocUploadComponent } from './doc-upload/doc-upload.component';
 
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { faCoffee, faFileExcel, faFileWord, faFilePdf } from '@fortawesome/free-solid-svg-icons';
+library.add(faCoffee, faFileExcel, faFileWord, faFilePdf);
 const routes: Routes = [
   { path: '', redirectTo: 'search', pathMatch: 'full' },
   { path: 'search', component: DocSearchComponent },
@@ -25,7 +28,8 @@ const routes: Routes = [
     BrowserModule,
     RouterModule.forRoot(routes),
     ReactiveFormsModule,
-    HttpClientModule
+    HttpClientModule,
+    FontAwesomeModule
   ],
   providers: [],
   bootstrap: [AppComponent]

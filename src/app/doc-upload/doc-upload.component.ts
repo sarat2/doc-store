@@ -26,6 +26,7 @@ export class DocUploadComponent implements OnInit {
   onAppChange(event) {
     this.appName = event.target.value;
     this.metadata = new FormGroup({
+      id: new FormControl('', []),
       appName: new FormControl(event.target.value, [Validators.required]),
       appKey: new FormControl('123456', [Validators.required]),
       contractNo: new FormControl('19AX04567R0A01', [Validators.required]),
@@ -54,10 +55,9 @@ export class DocUploadComponent implements OnInit {
   }
 
   onSubmit() {
-    console.log(this.formatFileName());
     const fd = new FormData();
-    fd.append('file', this.selectedFile, this.formatFileName());
     fd.append('metadata', JSON.stringify(this.metadata.value));
+    fd.append('file', this.selectedFile, this.metadata.value.documentName);
 
     // no need to set headers explicitly
     // const headers = new HttpHeaders();

@@ -87,9 +87,9 @@
                 </div>
             </div>
             <hr class="mb-4">
-            <div class="col-md-12 px-0">
+            <!-- <div class="col-md-12 px-0">
                 {{ metadata.value | json }}
-            </div>
+            </div> -->
             <button class="btn btn-primary btn-md" type="submit" [disabled]="metadata.invalid">Upload</button>
             <button class="btn btn-secondary-light btn-md ml-2" type="button" [routerLink]="['/search']">Cancel</button>
             {{ progress || '' }}
