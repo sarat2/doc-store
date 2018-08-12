@@ -6,7 +6,7 @@ const inspect = require('util').inspect;
 const uuidv1 = require('uuid/v1');
 const path = require('path');
 const azure = require('azure-storage');
-const blobService = azure.createBlobService(process.env.storageConnectionString);
+const blobService = azure.createBlobService(process.env.storageKey);
 
 /* GET api listing. */
 router.get('/', (req, res) => {
