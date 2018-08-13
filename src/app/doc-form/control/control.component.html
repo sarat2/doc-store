@@ -1,0 +1,63 @@
+<ng-container [formGroup]="form">
+  <ng-container [ngSwitch]="ctrl.controlType">
+    
+    <ng-container *ngSwitchCase="'textbox'">
+      <label [attr.for]="ctrl.key" *ngIf="showlabel">{{ctrl.label}}</label>
+      <input  class="form-control" 
+              [id]="ctrl.key" 
+              [type]="ctrl.type" 
+              [formControlName]="ctrl.key" 
+              (change)="checkValue($event)" />
+    </ng-container>
+    
+    <ng-container *ngSwitchCase="'dropdown'">
+      <label [attr.for]="ctrl.key" *ngIf="showlabel">{{ctrl.label}}</label>
+      <select class="form-control" [id]="ctrl.key" [formControlName]="ctrl.key" (change)="checkValue($event.target.value)">
+        <option *ngFor="let opt of ctrl.options" [value]="opt.key">{{opt.value}}</option>
+      </select>
+    </ng-container>
+    
+    <ng-container *ngSwitchCase="'radio'">
+      <label [attr.for]="ctrl.key" *ngIf="showlabel">{{ctrl.label}}</label>
+      <div class="maxl">
+        <ng-container *ngFor="let opt of ctrl.options">
+          <label class="radio inline"> 
+            <input type="radio" [id]="ctrl.key" [formControlName]="ctrl.key" [value]="opt.value">
+            <span> {{opt.key}} </span> 
+          </label>
+        </ng-container>
+      </div>
+    </ng-container>
+  </ng-container>
+
+  <ng-container *ngIf="ctrl.childForm && (controlValue == ctrl.showChild.onValue || ctrl.showChild.always == true)">
+    <div class="col-md-12 px-0">
+        <div class="row">
+          <ng-container *ngFor="let child of ctrl.childForm.value">
+            <app-control [ctrl]="child" [form]="form.controls[ctrl.childForm.key]" showlabel="true" class="form-group col-md-{{child.width}}"></app-control>
+          </ng-container>
+        </div>
+    </div>
+  </ng-container>
+
+  <ng-container *ngIf="ctrl.childTable && (controlValue == ctrl.showChild.onValue || ctrl.showChild.always == true)">
+    <div class="col-md-12 px-0">
+      <div class="divTable" [formArrayName]="ctrl.childTable.key">
+        <div class="divTableBody">
+          <div class="divTableRow" *ngFor="let row of ctrl.childTable.value; let i = index" [formGroupName]="i">
+            <div class="divTableCell" *ngFor="let key of getKeys(row); let index = index">
+              <app-control [ctrl]="row[key]" [form]="form.controls[ctrl.childTable.key].controls[i]" [showlabel]="(i==0)"></app-control>
+            </div>
+          </div>
+          <div class="divTableRow">
+            <div class="divTableCell">
+              <button type="button" class="btn btn-xs btn-default" (click)="addChildTableRow()">Add</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+
+  <div class="errorMessage" *ngIf="enabled && !isValid">{{ctrl.label}} is required</div>
+</ng-container>

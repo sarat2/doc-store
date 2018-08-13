@@ -1,11 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { HttpClient, HttpEventType, HttpParams, HttpHeaders } from '@angular/common/http';
+import { DocFormService } from '../doc-form/doc-form.service';
 
 @Component({
   selector: 'app-doc-upload',
   templateUrl: './doc-upload.component.html',
-  styleUrls: ['./doc-upload.component.css']
+  styleUrls: ['./doc-upload.component.css'],
+  providers: [DocFormService],
 })
 export class DocUploadComponent implements OnInit {
   metadata: FormGroup = null;

@@ -7,6 +7,8 @@ import { HttpClientModule } from '@angular/common/http';
 import { AppComponent } from './app.component';
 import { DocSearchComponent } from './doc-search/doc-search.component';
 import { DocUploadComponent } from './doc-upload/doc-upload.component';
+import { DocFormComponent } from './doc-form/doc-form.component';
+import { ControlComponent } from './doc-form/control/control.component';
 
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { library } from '@fortawesome/fontawesome-svg-core';
@@ -22,7 +24,9 @@ const routes: Routes = [
   declarations: [
     AppComponent,
     DocSearchComponent,
-    DocUploadComponent
+    DocUploadComponent,
+    DocFormComponent,
+    ControlComponent
   ],
   imports: [
     BrowserModule,

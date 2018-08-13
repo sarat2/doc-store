@@ -1,0 +1,19 @@
+<div *ngIf="isFormAvailable">
+  <form (ngSubmit)="onSubmit()" [formGroup]="form">
+    <div class="col-md-12 px-0">
+      <div class="row">
+        <ng-container *ngFor="let ctrl of ctrls">
+          <app-control [ctrl]="ctrl" [form]="form" showlabel="true" class="form-group col-md-{{ctrl.width}}"></app-control>
+        </ng-container>
+      </div>
+    </div>
+
+    <button type="submit" [disabled]="!form.valid" class="btn btn-primary btn-md">Save</button>
+  </form>
+
+  <div *ngIf="payLoad" class="form-row">
+    <strong>Saved the following values</strong>
+    <br>{{payLoad}}
+    <!-- <br>{{payLoad_raw}} -->
+  </div>
+</div>
