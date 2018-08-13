@@ -40,7 +40,7 @@ export class ControlComponent {
       // console.log(ctrl);
       // console.log(value);
       // console.log(this.ctrl.downstreamCtrl.onValue);
-      // console.log(this.ctrl.downstreamCtrl.onValue == value);
+      // console.log(this.ctrl.downstreamCtrl.onValue === value);
 
       if (this.ctrl.downstreamCtrl.onValue === value) {
         if (ctrl.enabled !== this.ctrl.downstreamCtrl.enable) {
@@ -52,8 +52,11 @@ export class ControlComponent {
           }
         }
       } else {
-        // TODO: Check if the default for the control is enabled on disabled
-        ctrl.enable();
+        if (this.ctrl.downstreamCtrl.enable) {
+          ctrl.disable();
+        } else {
+          ctrl.enable();
+        }
       }
       // console.log(this.ctrl.downstreamCtrl.onValue);
       // console.log((<HTMLTextAreaElement>event.target).value);
@@ -95,6 +98,12 @@ export class ControlComponent {
   removeChildTableRow(i: number) {
     const control = <FormArray>this.form.controls[this.ctrl.childTable.key];
     control.removeAt(i);
+  }
+
+  onFileSelected(event) {
+    this.ctrl.file = <File>event.target.files[0];
+    // console.log(this.ctrl.file);
+    this.ctrl.value = this.ctrl.file.name;
   }
 
 }

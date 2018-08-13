@@ -12,7 +12,7 @@ const blobService = azure.createBlobService(process.env.storageKey);
 router.get('/', (req, res) => {
   console.log('api check')
   res.status(200).json({ message: 'api works!!' });
-});
+}); 
 
 router.get('/metadata/:n', (req, res) => {
   res.status(200).json({

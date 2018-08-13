@@ -7,6 +7,7 @@ import { TextboxControl } from './control/control-textbox';
 import { DropdownControl } from './control/control-dropdown';
 import { RadioControl } from './control/control-radio';
 import { ListControl } from './control/control-list';
+import { FileControl } from './control/control-file';
 
 @Injectable()
 export class DocFormService {
@@ -23,6 +24,117 @@ export class DocFormService {
 
   getFormSchema() {
 
+    const schema = {
+      appName: 'contracts',
+      metadata: [
+        {
+          controlType: 'textbox',
+          key: 'appKey',
+          label: 'App Key #',
+          placeholder: 'Application Entity Key/ID',
+          type: 'text',
+          value: '',
+          required: true,
+          order: 1,
+          width: 8
+        },
+        {
+          controlType: 'textbox',
+          key: 'contractNo',
+          label: 'Contract #',
+          placeholder: 'Contract #',
+          type: 'text',
+          value: '',
+          required: true,
+          order: 2,
+          width: 6
+        },
+        {
+          controlType: 'textbox',
+          key: 'fmsRegNo',
+          label: 'FMS Regsitration #',
+          placeholder: 'FMS Regsitration #',
+          type: 'text',
+          value: '',
+          required: true,
+          order: 3,
+          width: 6
+        },
+        {
+          controlType: 'textbox',
+          key: 'startDate',
+          label: 'Start Date',
+          placeholder: 'Contract Start Date',
+          type: 'date',
+          value: '',
+          order: 4,
+          width: 3
+        },
+        {
+          controlType: 'textbox',
+          key: 'endDate',
+          label: 'End Date',
+          placeholder: 'Contract End Date',
+          type: 'date',
+          value: '',
+          order: 5,
+          width: 3
+        },
+        {
+          controlType: 'dropdown',
+          key: 'category',
+          label: 'Category',
+          placeholder: 'Select Category',
+          options: [
+            { key: 'Proposal', value: 'Proposal' },
+            { key: 'Bids', value: 'Bids' },
+            { key: 'Awards', value: 'Awards' }
+          ],
+          order: 5,
+          width: 3,
+          required: true,
+          downstreamCtrl: {
+            name: 'subCategory',
+            onValue: 'Awards',
+            enable: true
+          }
+        },
+        {
+          controlType: 'dropdown',
+          key: 'subCategory',
+          label: 'Sub-Category',
+          placeholder: 'Select Sub-Category',
+          options: [
+            { key: 'Original', value: 'Original' },
+            { key: 'ChangeOrder', value: 'ChangeOrder' }
+          ],
+          order: 5,
+          width: 3
+        },
+        {
+          controlType: 'file',
+          key: 'docName',
+          label: 'Document',
+          value: null,
+          placeholder: 'Select Document',
+          file: null,
+          order: 5,
+          width: 6
+        }
+      ]
+    };
+
+    const controls: ControlBase<any>[] = schema.metadata.map((i) => {
+      if (i.controlType === 'textbox') {
+        return new TextboxControl(i);
+      } else if (i.controlType === 'dropdown') {
+        return new DropdownControl(i);
+      } else if (i.controlType === 'file') {
+        return new FileControl(i);
+      }
+
+    });
+    /*
     const controls: ControlBase<any>[] = [
 
       new TextboxControl({
@@ -208,7 +320,7 @@ export class DocFormService {
 
       // })
     ];
-
+    */
     return controls.sort((a, b) => a.order - b.order);
   }
 

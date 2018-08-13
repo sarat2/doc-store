@@ -6,6 +6,7 @@
       <input  class="form-control" 
               [id]="ctrl.key" 
               [type]="ctrl.type" 
+              [placeholder]="ctrl.placeholder"
               [formControlName]="ctrl.key" 
               (change)="checkValue($event)" />
     </ng-container>
@@ -13,6 +14,7 @@
     <ng-container *ngSwitchCase="'dropdown'">
       <label [attr.for]="ctrl.key" *ngIf="showlabel">{{ctrl.label}}</label>
       <select class="form-control" [id]="ctrl.key" [formControlName]="ctrl.key" (change)="checkValue($event.target.value)">
+          <option value="">{{ctrl.placeholder}}</option>
         <option *ngFor="let opt of ctrl.options" [value]="opt.key">{{opt.value}}</option>
       </select>
     </ng-container>
@@ -28,7 +30,20 @@
         </ng-container>
       </div>
     </ng-container>
+
+    <ng-container *ngSwitchCase="'file'">
+      <label [attr.for]="ctrl.key" *ngIf="showlabel">{{ctrl.label}}</label>
+      <div class="input-group">
+          <input type="text" class="form-control" placeholder="{{ctrl.placeholder}}" [value]="ctrl.value">
+          <div class="input-group-prepend">
+              <input type="file" style="display: none;" [id]="ctrl.key" class="form-control" [formControlName]="ctrl.key" (change)="onFileSelected($event)" #fileInput>
+              <button type="button" class="btn btn-outline-primary btn-md" (click)="fileInput.click()">Choose File</button>
+          </div>
+      </div>
+
+    </ng-container>
   </ng-container>
+
 
   <ng-container *ngIf="ctrl.childForm && (controlValue == ctrl.showChild.onValue || ctrl.showChild.always == true)">
     <div class="col-md-12 px-0">
@@ -46,7 +61,7 @@
         <div class="divTableBody">
           <div class="divTableRow" *ngFor="let row of ctrl.childTable.value; let i = index" [formGroupName]="i">
             <div class="divTableCell" *ngFor="let key of getKeys(row); let index = index">
-              <app-control [ctrl]="row[key]" [form]="form.controls[ctrl.childTable.key].controls[i]" [showlabel]="(i==0)"></app-control>
+              <app-control [ctrl]="row[key]" [f orm]="form.controls[ctrl.childTable.key].controls[i]" [showlabel]="(i==0)"></app-control>
             </div>
           </div>
           <div class="divTableRow">
