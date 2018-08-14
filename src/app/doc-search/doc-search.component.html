@@ -62,9 +62,8 @@
               <td>{{row.fmsRegNo}}</td>
               <td>{{row.startDate}}</td>
               <td>{{row.endDate}}</td>
-
               <td>
-                <a (click)="onDownload(row.appName, row.docPath, row.documentName)">{{row.documentName}}</a>
+                <a (click)="onDownload(row.docPath, row.docName)">{{row.docName}}</a>
               </td>
               <!-- <td>
               <fa-icon icon="file-excel"></fa-icon>

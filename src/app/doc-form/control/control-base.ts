@@ -11,14 +11,13 @@ export class ControlBase<T> {
     always: boolean,
     onValue: string
   };
-  downstreamCtrl?: {
+  downstreamCtrl?: Array<{
     name: string,
     enable: boolean,
     onValue: any
-  };
+  }>;
   childForm?: ChildForm;
   childTable?: ChildTable;
-  file: File;
 
   constructor(options: {
     value?: T,
@@ -33,14 +32,13 @@ export class ControlBase<T> {
       always: boolean,
       onValue: any
     },
-    downstreamCtrl?: {
+    downstreamCtrl?: Array<{
       name: string,
       enable: boolean,
       onValue: any
-    }
+    }>,
     childForm?: ChildForm,
     childTable?: ChildTable;
-    file?: File
   } = {}) {
     this.value = options.value;
     this.key = options.key || '';
@@ -54,7 +52,6 @@ export class ControlBase<T> {
     this.downstreamCtrl = options.downstreamCtrl || null;
     this.childForm = options.childForm || null;
     this.childTable = options.childTable || null;
-    this.file = options.file || null;
   }
 }
 

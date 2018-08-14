@@ -20,14 +20,14 @@ export class DocSearchComponent implements OnInit {
   ngOnInit() { }
 
   search(sq: string): void {
-    if (sq.length > 3) {
+    // if (sq.length > 3) {
       const url = String.Format(this.apibase, this.appName, sq);
       this.http.get(url).subscribe(data => {
         this.result = data;
       });
-    } else {
-      this.result = null;
-    }
+    // } else {
+    //   this.result = null;
+    // }
   }
 
   getCount() {
@@ -36,9 +36,9 @@ export class DocSearchComponent implements OnInit {
     });
   }
 
-  onDownload(c: string, p: string, n: string) {
-    console.log('container - {$c},\npath - {$p},\nfilename - {$n}');
-    return this.http.get('/api/document/download?c=' + c + '&p=' + p, { responseType: 'blob' }).subscribe(res => {
+  onDownload(p: string, n: string) {
+    console.log(`container - ${this.appName},\npath - ${p},\nfilename - ${n}`);
+    return this.http.get(`/api/document/download?c=${this.appName}&p=${p}`, { responseType: 'blob' }).subscribe(res => {
       // console.log('start download:', res);
       const url = window.URL.createObjectURL(res);
       const a = document.createElement('a');

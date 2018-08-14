@@ -88,16 +88,21 @@ export class DocFormService {
           options: [
             { key: 'Proposal', value: 'Proposal' },
             { key: 'Bids', value: 'Bids' },
-            { key: 'Awards', value: 'Awards' }
+            { key: 'Awards', value: 'Awards' },
+            { key: 'Vendor', value: 'Vendor' }
           ],
           order: 5,
           width: 3,
           required: true,
-          downstreamCtrl: {
+          downstreamCtrl: [{
             name: 'subCategory',
             onValue: 'Awards',
             enable: true
-          }
+          }, {
+            name: 'vendor',
+            onValue: 'Vendor',
+            enable: true
+          }]
         },
         {
           controlType: 'dropdown',
@@ -119,6 +124,17 @@ export class DocFormService {
           placeholder: 'Select Document',
           file: null,
           order: 5,
+          width: 6
+        },
+        {
+          controlType: 'textbox',
+          key: 'vendor',
+          label: 'Vendor Name',
+          placeholder: 'Vendor Name',
+          type: 'text',
+          value: '',
+          required: true,
+          order: 3,
           width: 6
         }
       ]

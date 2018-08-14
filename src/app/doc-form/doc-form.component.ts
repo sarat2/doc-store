@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, OnChanges, SimpleChanges, SimpleChange } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit, OnChanges, SimpleChanges, SimpleChange } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 
 import { ControlBase } from './control/control-base';
@@ -11,11 +11,14 @@ import { DocFormService } from './doc-form.service';
 })
 export class DocFormComponent implements OnChanges, OnInit {
   @Input() appName: string;
+  @Output() notify: EventEmitter<Object> = new EventEmitter<Object>();
   ctrls: ControlBase<any>[] = [];
   form: FormGroup;
   isFormAvailable = false;
-  payLoad = '';
-  payLoad_raw = '';
+  // payLoad = '';
+  // payLoad_raw = '';
+  metadata = '';
+  file: File;
 
   constructor(private svc: DocFormService) { }
 
@@ -39,7 +42,15 @@ export class DocFormComponent implements OnChanges, OnInit {
   }
 
   onSubmit() {
-    this.payLoad = JSON.stringify(this.form.value);
-    this.payLoad_raw = JSON.stringify(this.form.getRawValue());
+    // this.metadata = JSON.stringify(this.form.value);
+    this.metadata = JSON.stringify(this.form.getRawValue());
+    this.notify.emit({
+      metadata: this.form.getRawValue(),
+      file: this.file
+    });
+  }
+
+  onNotify(event) {
+    this.file = event;
   }
 }

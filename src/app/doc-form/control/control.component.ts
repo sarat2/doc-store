@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 import {
   FormBuilder, FormControl,
   FormGroup, Validators, FormArray
@@ -13,6 +13,7 @@ export class ControlComponent {
   @Input() ctrl: ControlBase<any>;
   @Input() form: FormGroup;
   @Input() showlabel: boolean;
+  @Output() notify: EventEmitter<File> = new EventEmitter<File>();
 
   constructor(private fb: FormBuilder) {
   }
@@ -35,29 +36,32 @@ export class ControlComponent {
 
   checkValue(value: string) {
     if (this.ctrl.downstreamCtrl) {
-      const ctrl = this.form.get(this.ctrl.downstreamCtrl.name);
+      this.ctrl.downstreamCtrl.forEach(el => {
+        const ctrl = this.form.get(el.name);
 
-      // console.log(ctrl);
-      // console.log(value);
-      // console.log(this.ctrl.downstreamCtrl.onValue);
-      // console.log(this.ctrl.downstreamCtrl.onValue === value);
+        // console.log(ctrl);
+        // console.log(value);
+        // console.log(this.ctrl.downstreamCtrl.onValue);
+        // console.log(this.ctrl.downstreamCtrl.onValue === value);
 
-      if (this.ctrl.downstreamCtrl.onValue === value) {
-        if (ctrl.enabled !== this.ctrl.downstreamCtrl.enable) {
-          if (!this.ctrl.downstreamCtrl.enable) {
-            ctrl.setValue(null);
+        if (el.onValue === value) {
+          if (ctrl.enabled !== el.enable) {
+            if (!el.enable) {
+              ctrl.setValue(null);
+              ctrl.disable();
+            } else {
+              ctrl.enable();
+            }
+          }
+        } else {
+          if (el.enable) {
             ctrl.disable();
           } else {
             ctrl.enable();
           }
         }
-      } else {
-        if (this.ctrl.downstreamCtrl.enable) {
-          ctrl.disable();
-        } else {
-          ctrl.enable();
-        }
-      }
+      });
+
       // console.log(this.ctrl.downstreamCtrl.onValue);
       // console.log((<HTMLTextAreaElement>event.target).value);
       // console.log(ctrl.value);
@@ -101,9 +105,9 @@ export class ControlComponent {
   }
 
   onFileSelected(event) {
-    this.ctrl.file = <File>event.target.files[0];
-    // console.log(this.ctrl.file);
-    this.ctrl.value = this.ctrl.file.name;
+    const file: File = <File>event.target.files[0];
+    this.ctrl.value = file.name;
+    this.notify.emit(file);
   }
 
 }

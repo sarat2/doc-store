@@ -157,7 +157,7 @@
 	display: table-row-group;
 }
 
-
+/*radio button*/
 .maxl{
   margin:0px;
 }
@@ -218,4 +218,12 @@
   -ms-border-radius:100%;
   -moz-border-radius:100%;
   -webkit-border-radius:100%;
+}
+
+/*btn-xs*/
+.btn-group-xs > .btn, .btn-xs {
+  padding  : .25rem .4rem;
+  font-size  : .875rem;
+  line-height  : .5;
+  border-radius : .2rem;
 }

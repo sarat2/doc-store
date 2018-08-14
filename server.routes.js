@@ -95,11 +95,8 @@ router.get('/search/list', (request, response) => {
 router.get('/document/download', (req, res) => {
   var container = req.query.c.toLowerCase();
   var docPath = req.query.p;
-
-  // var container = req.params.c.toLowerCase();
-  // var docPath = req.params.p;
-
   var fileName = path.parse(docPath).base;
+  
   console.log(container);
   console.log(docPath);
   console.log(fileName);
