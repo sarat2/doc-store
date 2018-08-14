@@ -33,7 +33,7 @@
           <div class="card-header">Document(s)</div>
           <div class="card-body">
             <div class="mb-3" *ngFor='let i of list'>
-                {{i.index | titlecase }}................{{i.count}}
+              {{i.index | titlecase }}................{{i.count}}
             </div>
           </div>
         </div>
@@ -45,8 +45,7 @@
             <tr>
               <th scope="col">#</th>
               <th scope="col">AppKey#</th>
-              <th scope="col">Category/Sub-Category</th>
-              <th scope="col">Contract#</th>
+              <th scope="col">Category/Sub</th>
               <th scope="col">FMS Reg#</th>
               <th scope="col">Start Date</th>
               <th scope="col">End Date</th>
@@ -57,8 +56,7 @@
             <tr *ngFor="let row of result.value; let i = index">
               <th scope="row">{{i+1}}</th>
               <td>{{row.appKey}}</td>
-              <td>{{row.category + ' / ' + row.subCategory }}</td>
-              <td>{{row.contractNo}}</td>
+              <td>{{row.category}} {{(row.subCategory)? '/' + row.subCategory : ''}}</td>
               <td>{{row.fmsRegNo}}</td>
               <td>{{row.startDate}}</td>
               <td>{{row.endDate}}</td>
