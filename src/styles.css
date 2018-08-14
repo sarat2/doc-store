@@ -10,6 +10,11 @@
     font-family: "Playfair Display", Georgia, "Times New Roman", serif;
     font-size: 2.25rem;
   }
+
+  .blog-header-logo-sm {
+    font-family: "Playfair Display", Georgia, "Times New Roman", serif;
+    font-size: 1.50rem;
+  }
   
   .blog-header-logo:hover {
     text-decoration: none;

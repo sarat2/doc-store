@@ -14,28 +14,6 @@ router.get('/', (req, res) => {
   res.status(200).json({ message: 'api works!!' });
 }); 
 
-router.get('/schema/:n', (req, res) => {
-  
-  res.status(200).json({
-    textbox: {
-      key: 'firstName',
-      label: 'First Name',
-      type: 'text',
-      value: '',
-      required: true,
-      order: 1
-    },
-    textbox: {
-      key: 'lastName',
-      label: 'Last Name',
-      type: 'text',
-      value: '',
-      required: true,
-      order: 2
-    }
-  });
-});
-
 router.get('/search/list', (request, response) => {
 
   var options = {
