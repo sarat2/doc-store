@@ -14,7 +14,8 @@ router.get('/', (req, res) => {
   res.status(200).json({ message: 'api works!!' });
 }); 
 
-router.get('/metadata/:n', (req, res) => {
+router.get('/schema/:n', (req, res) => {
+  
   res.status(200).json({
     textbox: {
       key: 'firstName',

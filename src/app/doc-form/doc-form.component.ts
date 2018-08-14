@@ -31,9 +31,8 @@ export class DocFormComponent implements OnChanges, OnInit {
 
   loadAppForm() {
     if (this.appName) {
-      this.svc.getForm(this.appName).then((data) => {
-        console.log(data);
-        this.ctrls = this.svc.getFormSchema();
+      this.svc.getFormSchema(this.appName).then((data: any) => {
+        this.ctrls = this.svc.castSchema2Controls(data.schema);
         this.form = this.svc.toFromGroup(this.ctrls);
         // console.log(this.form);
         this.isFormAvailable = true;

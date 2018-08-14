@@ -13,144 +13,70 @@ import { FileControl } from './control/control-file';
 export class DocFormService {
   constructor(private fb: FormBuilder, private http: HttpClient) { }
 
-  getForm(appName: string) {
+  getFormSchema(appName: string) {
     return new Promise((resolve, reject) => {
-      this.http.get('/api/metadata/' + appName).subscribe(res => {
-        console.log(res);
+      const container = 'schema';
+      this.http.get(`/api/document/download?c=${container}&p=${appName}.JSON`).subscribe(res => {
         resolve(res);
       });
     });
   }
 
-  getFormSchema() {
-
-    const schema = {
-      appName: 'contracts',
-      metadata: [
-        {
-          controlType: 'textbox',
-          key: 'appKey',
-          label: 'App Key #',
-          placeholder: 'Application Entity Key/ID',
-          type: 'text',
-          value: '',
-          required: true,
-          order: 1,
-          width: 8
-        },
-        {
-          controlType: 'textbox',
-          key: 'contractNo',
-          label: 'Contract #',
-          placeholder: 'Contract #',
-          type: 'text',
-          value: '',
-          required: true,
-          order: 2,
-          width: 6
-        },
-        {
-          controlType: 'textbox',
-          key: 'fmsRegNo',
-          label: 'FMS Regsitration #',
-          placeholder: 'FMS Regsitration #',
-          type: 'text',
-          value: '',
-          required: true,
-          order: 3,
-          width: 6
-        },
-        {
-          controlType: 'textbox',
-          key: 'startDate',
-          label: 'Start Date',
-          placeholder: 'Contract Start Date',
-          type: 'date',
-          value: '',
-          order: 4,
-          width: 3
-        },
-        {
-          controlType: 'textbox',
-          key: 'endDate',
-          label: 'End Date',
-          placeholder: 'Contract End Date',
-          type: 'date',
-          value: '',
-          order: 5,
-          width: 3
-        },
-        {
-          controlType: 'dropdown',
-          key: 'category',
-          label: 'Category',
-          placeholder: 'Select Category',
-          options: [
-            { key: 'Proposal', value: 'Proposal' },
-            { key: 'Bids', value: 'Bids' },
-            { key: 'Awards', value: 'Awards' },
-            { key: 'Vendor', value: 'Vendor' }
-          ],
-          order: 5,
-          width: 3,
-          required: true,
-          downstreamCtrl: [{
-            name: 'subCategory',
-            onValue: 'Awards',
-            enable: true
-          }, {
-            name: 'vendor',
-            onValue: 'Vendor',
-            enable: true
-          }]
-        },
-        {
-          controlType: 'dropdown',
-          key: 'subCategory',
-          label: 'Sub-Category',
-          placeholder: 'Select Sub-Category',
-          options: [
-            { key: 'Original', value: 'Original' },
-            { key: 'ChangeOrder', value: 'ChangeOrder' }
-          ],
-          order: 5,
-          width: 3
-        },
-        {
-          controlType: 'file',
-          key: 'docName',
-          label: 'Document',
-          value: null,
-          placeholder: 'Select Document',
-          file: null,
-          order: 5,
-          width: 6
-        },
-        {
-          controlType: 'textbox',
-          key: 'vendor',
-          label: 'Vendor Name',
-          placeholder: 'Vendor Name',
-          type: 'text',
-          value: '',
-          required: true,
-          order: 3,
-          width: 6
-        }
-      ]
-    };
-
-    const controls: ControlBase<any>[] = schema.metadata.map((i) => {
+  castSchema2Controls(schema: Array<any>) {
+    const controls: ControlBase<any>[] = schema.map((i) => {
       if (i.controlType === 'textbox') {
         return new TextboxControl(i);
       } else if (i.controlType === 'dropdown') {
         return new DropdownControl(i);
+      } else if (i.controlType === 'radio') {
+        return new RadioControl(i);
+      } else if (i.controlType === 'list') {
+        return new ListControl(i);
       } else if (i.controlType === 'file') {
         return new FileControl(i);
       }
+    });
+
+    return controls.sort((a, b) => a.order - b.order);
+  }
+
+  toFromGroup(controls: ControlBase<any>[]) {
+    const obj: any = {};
+    controls.forEach(ctrl => {
+      if (['textbox', 'dropdown', 'radio', 'file'].includes(ctrl.controlType)) {
+        obj[ctrl.key] = [(ctrl.value || ''), (ctrl.required ? [Validators.required] : [])];
+
+        if (ctrl.childForm) {
+          obj[ctrl.childForm.key] = this.toFromGroup(ctrl.childForm.value);
+        }
+
+        if (ctrl.childTable) {
+          const list: any[] = this.initChildTable(ctrl.childTable.value);
+          obj[ctrl.childTable.key] = this.fb.array(list);
+        }
+      } else if (ctrl.controlType === 'list') {
+
+      }
 
     });
-    /*
+    return this.fb.group(obj);
+  }
+
+  initChildTable(obj: any[]) {
+    const returnarray: FormGroup[] = [];
+    obj.forEach(item => {
+      const line: any = {};
+      Object.entries(item).forEach(([key, value]) => {
+        line[key] = [((<ControlBase<string>>value).value || ''), ((<ControlBase<string>>value).required ? [Validators.required] : [])];
+      });
+      returnarray.push(this.fb.group(line));
+    });
+    return returnarray;
+  }
+}
+
+
+/*
     const controls: ControlBase<any>[] = [
 
       new TextboxControl({
@@ -337,35 +263,3 @@ export class DocFormService {
       // })
     ];
     */
-    return controls.sort((a, b) => a.order - b.order);
-  }
-
-  toFromGroup(controls: ControlBase<any>[]) {
-    const obj: any = {};
-    controls.forEach(ctrl => {
-      obj[ctrl.key] = [(ctrl.value || ''), (ctrl.required ? [Validators.required] : [])];
-
-      if (ctrl.childForm) {
-        obj[ctrl.childForm.key] = this.toFromGroup(ctrl.childForm.value);
-      }
-
-      if (ctrl.childTable) {
-        const list: any[] = this.initChildTable(ctrl.childTable.value);
-        obj[ctrl.childTable.key] = this.fb.array(list);
-      }
-    });
-    return this.fb.group(obj);
-  }
-
-  initChildTable(obj: any[]) {
-    const returnarray: FormGroup[] = [];
-    obj.forEach(item => {
-      const line: any = {};
-      Object.entries(item).forEach(([key, value]) => {
-        line[key] = [((<ControlBase<string>>value).value || ''), ((<ControlBase<string>>value).required ? [Validators.required] : [])];
-      });
-      returnarray.push(this.fb.group(line));
-    });
-    return returnarray;
-  }
-}

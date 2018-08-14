@@ -38,16 +38,10 @@ export class ControlComponent {
     if (this.ctrl.downstreamCtrl) {
       this.ctrl.downstreamCtrl.forEach(el => {
         const ctrl = this.form.get(el.name);
-
-        // console.log(ctrl);
-        // console.log(value);
-        // console.log(this.ctrl.downstreamCtrl.onValue);
-        // console.log(this.ctrl.downstreamCtrl.onValue === value);
-
         if (el.onValue === value) {
           if (ctrl.enabled !== el.enable) {
             if (!el.enable) {
-              ctrl.setValue(null);
+              ctrl.setValue('');
               ctrl.disable();
             } else {
               ctrl.enable();
@@ -61,30 +55,6 @@ export class ControlComponent {
           }
         }
       });
-
-      // console.log(this.ctrl.downstreamCtrl.onValue);
-      // console.log((<HTMLTextAreaElement>event.target).value);
-      // console.log(ctrl.value);
-      // console.log(this.form.controls[this.ctrl.downstreamCtrl.name]);
-
-      /*
-      if ((<HTMLTextAreaElement>event.target).value == this.ctrl.downstreamCtrl.onValue) {
-        console.log(ctrl.value);
-        if (this.ctrl.downstreamCtrl.enable) {
-          ctrl.enable();
-        } else {
-          this.form.controls[this.ctrl.downstreamCtrl.name].setValue('');
-          ctrl.disable();
-        }
-      } else {
-        if (!this.ctrl.downstreamCtrl.enable) {
-          ctrl.enable();
-        } else {
-          this.form.controls[this.ctrl.downstreamCtrl.name].setValue('');
-          ctrl.disable();
-        }
-      }
-      */
     }
   }
 

@@ -40,11 +40,11 @@
               <button type="button" class="btn btn-outline-primary btn-md" (click)="fileInput.click()">Choose File</button>
           </div>
       </div>
-
     </ng-container>
+
   </ng-container>
 
-
+  <!-- Child Form -->
   <ng-container *ngIf="ctrl.childForm && (controlValue == ctrl.showChild.onValue || ctrl.showChild.always == true)">
     <div class="col-md-12 px-0">
         <div class="row">
@@ -55,6 +55,7 @@
     </div>
   </ng-container>
 
+  <!-- Child Table -->
   <ng-container *ngIf="ctrl.childTable && (controlValue == ctrl.showChild.onValue || ctrl.showChild.always == true)">
     <div class="col-md-12 px-0">
       <div class="divTable" [formArrayName]="ctrl.childTable.key">
