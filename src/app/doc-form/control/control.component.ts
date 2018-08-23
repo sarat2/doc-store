@@ -4,6 +4,7 @@ import {
   FormGroup, Validators, FormArray
 } from '@angular/forms';
 import { ControlBase } from './control-base';
+import { TableControl } from './control-table';
 
 @Component({
   selector: 'app-control',
@@ -59,19 +60,41 @@ export class ControlComponent {
   }
 
   addChildTableRow() {
-    const control = <FormArray>(this.form.controls[this.ctrl.childTable.key]);
     const line: any = {};
-    const newline: any = this.ctrl.childTable.value[0];
-    Object.entries(newline).forEach(([key, value]) => {
-      line[key] = [((<ControlBase<string>>value).value || ''), ((<ControlBase<string>>value).required ? [Validators.required] : [])];
+    let formArray: FormArray = null;
+    let newline: any = null;
+    let control: any = null;
+    if (this.ctrl.childTable) {
+      formArray = <FormArray>(this.form.controls[this.ctrl.childTable.key]);
+      control = this.ctrl.childTable;
+      newline = control.value[0];
+    } else {
+      formArray = <FormArray>(this.form.controls[this.ctrl.key]);
+      control = this.ctrl;
+      newline = control.schema[0];
+    }
+    newline.forEach((el) => {
+      line[el.key] = [(el.value || ''), (el.required ? [Validators.required] : [])];
     });
-    this.ctrl.childTable.value.push(newline);
-    control.push(this.fb.group(line));
+    formArray.push(this.fb.group(line));
+    control.schema.push(newline);
   }
 
   removeChildTableRow(i: number) {
-    const control = <FormArray>this.form.controls[this.ctrl.childTable.key];
-    control.removeAt(i);
+    let control: any = null;
+    if (this.ctrl.childTable) {
+      if (this.ctrl.childTable.value.length !== 1) {
+        control = <FormArray>(this.form.controls[this.ctrl.childTable.key]);
+        control.removeAt(i);
+        this.ctrl.childTable.value.splice(i, 1);
+      }
+    } else {
+      if (this.ctrl.schema.length !== 1) {
+        control = <FormArray>(this.form.controls[this.ctrl.key]);
+        control.removeAt(i);
+        this.ctrl.schema.splice(i, 1);
+      }
+    }
   }
 
   onFileSelected(event) {

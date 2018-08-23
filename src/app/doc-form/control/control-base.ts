@@ -18,8 +18,9 @@ export class ControlBase<T> {
   }>;
   childForm?: ChildForm;
   childTable?: ChildTable;
+  schema?: Array<ControlBase<string>[]>;
 
-  constructor(options: {
+  constructor(key: string, options: {
     value?: T,
     key?: string,
     label?: string,
@@ -39,9 +40,10 @@ export class ControlBase<T> {
     }>,
     childForm?: ChildForm,
     childTable?: ChildTable;
+    schema?: Array<ControlBase<string>[]>;
   } = {}) {
+    this.key = key || '';
     this.value = options.value;
-    this.key = options.key || '';
     this.label = options.label || '';
     this.placeholder = options.placeholder || '';
     this.required = !!options.required;
@@ -52,6 +54,7 @@ export class ControlBase<T> {
     this.downstreamCtrl = options.downstreamCtrl || null;
     this.childForm = options.childForm || null;
     this.childTable = options.childTable || null;
+    this.schema = options.schema || null;
   }
 }
 

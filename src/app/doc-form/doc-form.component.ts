@@ -42,11 +42,11 @@ export class DocFormComponent implements OnChanges, OnInit {
 
   onSubmit() {
     // this.metadata = JSON.stringify(this.form.value);
-    this.metadata = JSON.stringify(this.form.getRawValue());
-    this.notify.emit({
-      metadata: this.form.getRawValue(),
-      file: this.file
-    });
+    this.metadata = JSON.stringify(this.form.getRawValue(), null, 4);
+    // this.notify.emit({
+    //   metadata: this.form.getRawValue(),
+    //   file: this.file
+    // });
   }
 
   onNotify(event) {
