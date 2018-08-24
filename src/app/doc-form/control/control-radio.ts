@@ -1,6 +1,6 @@
 import { ControlBase } from './control-base';
 
-export class RadioControl extends ControlBase<string> {
+export class RadioControl extends ControlBase {
     options: { key: string, value: string }[] = [];
 
     constructor(key: string, options: {} = {}) {

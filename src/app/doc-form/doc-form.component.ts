@@ -12,7 +12,7 @@ import { DocFormService } from './doc-form.service';
 export class DocFormComponent implements OnChanges, OnInit {
   @Input() appName: string;
   @Output() notify: EventEmitter<Object> = new EventEmitter<Object>();
-  ctrls: ControlBase<any>[] = [];
+  ctrls: ControlBase[] = [];
   form: FormGroup;
   isFormAvailable = false;
   // payLoad = '';

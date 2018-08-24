@@ -1,6 +1,6 @@
 import { ControlBase } from './control-base';
 
-export class DropdownControl extends ControlBase<string> {
+export class DropdownControl extends ControlBase {
   options: {key: string, value: string}[] = [];
 
   constructor(key: string, options: {} = {}) {

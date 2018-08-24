@@ -11,7 +11,7 @@ import { TableControl } from './control-table';
   templateUrl: './control.component.html'
 })
 export class ControlComponent {
-  @Input() ctrl: ControlBase<any>;
+  @Input() ctrl: ControlBase;
   @Input() form: FormGroup;
   @Input() showlabel: boolean;
   @Output() notify: EventEmitter<File> = new EventEmitter<File>();
@@ -83,10 +83,10 @@ export class ControlComponent {
   removeChildTableRow(i: number) {
     let control: any = null;
     if (this.ctrl.childTable) {
-      if (this.ctrl.childTable.value.length !== 1) {
+      if (this.ctrl.childTable.schema.length !== 1) {
         control = <FormArray>(this.form.controls[this.ctrl.childTable.key]);
         control.removeAt(i);
-        this.ctrl.childTable.value.splice(i, 1);
+        this.ctrl.childTable.schema.splice(i, 1);
       }
     } else {
       if (this.ctrl.schema.length !== 1) {

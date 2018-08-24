@@ -1,6 +1,6 @@
 import { ControlBase } from './control-base';
 
-export class ListControl extends ControlBase<string> {
+export class ListControl extends ControlBase {
   constructor(key: string, options: {} = {}) {
     super(key, options);
   }

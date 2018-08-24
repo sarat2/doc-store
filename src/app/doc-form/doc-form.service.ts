@@ -23,10 +23,10 @@ export class DocFormService {
     });
   }
 
-  castSchema2Controls(schema: any): ControlBase<any>[] {
+  castSchema2Controls(schema: any): ControlBase[] {
     console.log(schema);
-    const controls: ControlBase<any>[] = Object.keys(schema).map((eln) => {
-      const opt = <ControlBase<any>>schema[eln];
+    const controls: ControlBase[] = Object.keys(schema).map((eln) => {
+      const opt = schema[eln];
       if (opt.controlType === 'textbox') {
         return new TextboxControl(eln, opt);
       } else if (opt.controlType === 'dropdown') {
@@ -35,7 +35,7 @@ export class DocFormService {
         return new RadioControl(eln, opt);
       } else if (opt.controlType === 'table') {
         console.log(opt.schema[0]);
-        const xyz: ControlBase<any>[] = this.castSchema2Controls(opt.schema[0]);
+        const xyz: ControlBase[] = this.castSchema2Controls(opt.schema[0]);
         opt.schema = [];
         opt.schema.push(xyz);
         return new TableControl(eln, opt);
@@ -49,18 +49,18 @@ export class DocFormService {
     return controls.sort((a, b) => a.order - b.order);
   }
 
-  toFromGroup(controls: ControlBase<any>[]) {
+  toFromGroup(controls: ControlBase[]) {
     const obj: any = {};
     controls.forEach(ctrl => {
       if (['textbox', 'dropdown', 'radio', 'file'].includes(ctrl.controlType)) {
         obj[ctrl.key] = [(ctrl.value || ''), (ctrl.required ? [Validators.required] : [])];
 
         if (ctrl.childForm) {
-          obj[ctrl.childForm.key] = this.toFromGroup(ctrl.childForm.value);
+          obj[ctrl.childForm.key] = this.toFromGroup(ctrl.childForm.schema);
         }
 
         if (ctrl.childTable) {
-          const tbl: any[] = this.initTable(ctrl.childTable.value);
+          const tbl: any[] = this.initTable(ctrl.childTable.schema);
           obj[ctrl.childTable.key] = this.fb.array(tbl);
         }
       } else if (ctrl.controlType === 'table') {
