@@ -26,7 +26,7 @@ export class DocFormService {
   castSchema2Controls(schema: any): ControlBase[] {
     console.log(schema);
     const controls: ControlBase[] = Object.keys(schema).map((eln) => {
-      const opt = schema[eln];
+      const opt = <ControlBase>schema[eln];
       if (opt.controlType === 'textbox') {
         return new TextboxControl(eln, opt);
       } else if (opt.controlType === 'dropdown') {
