@@ -76,9 +76,9 @@ router.get('/document/download', (req, res) => {
   var docPath = req.query.p;
   var fileName = path.parse(docPath).base;
   
-  console.log(container);
-  console.log(docPath);
-  console.log(fileName);
+  // console.log(container);
+  // console.log(docPath);
+  // console.log(fileName);
 
   blobService.getBlobProperties(container, docPath,
     function (err, properties, status) {

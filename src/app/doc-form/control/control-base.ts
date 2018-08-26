@@ -1,3 +1,5 @@
+import { FormGroup } from '@angular/forms';
+
 export class ControlBase {
   controlType: string;
   order: number;
@@ -44,4 +46,61 @@ export class ChildForm {
 export class ChildTable {
   key: string;
   schema: Array<ControlBase[]>;
+}
+
+export class FormNControls {
+  form: FormGroup;
+  controls: ControlBase[];
+
+  constructor(form: FormGroup, controls: ControlBase[]) {
+    this.form = form;
+    this.controls = controls;
+  }
+}
+
+export class TextboxControl extends ControlBase {
+  type: string;
+  placeholder: string;
+
+  constructor(key: string, options: {} = {}) {
+    super(key, options);
+    this.type = options['type'] || '';
+    this.placeholder = options['placeholder'] || '';
+  }
+}
+
+export class DropdownControl extends ControlBase {
+  options: {key: string, value: string}[] = [];
+
+  constructor(key: string, options: {} = {}) {
+    super(key, options);
+    this.options = options['options'] || [];
+  }
+}
+
+export class RadioControl extends ControlBase {
+  options: { key: string, value: string }[] = [];
+
+  constructor(key: string, options: {} = {}) {
+      super(key, options);
+      this.options = options['options'] || [];
+  }
+}
+
+export class FileControl extends ControlBase {
+  constructor(key: string, options: {} = {}) {
+    super(key, options);
+  }
+}
+
+export class ListControl extends ControlBase {
+  constructor(key: string, options: {} = {}) {
+    super(key, options);
+  }
+}
+
+export class TableControl extends ControlBase {
+  constructor(key: string, options: {} = {}) {
+      super(key, options);
+  }
 }

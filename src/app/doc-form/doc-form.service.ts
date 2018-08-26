@@ -2,76 +2,66 @@ import { Injectable } from '@angular/core';
 import { FormBuilder, FormGroup, FormArray, FormControl, Validators } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 
-import { ControlBase } from './control/control-base';
-import { TextboxControl } from './control/control-textbox';
-import { DropdownControl } from './control/control-dropdown';
-import { RadioControl } from './control/control-radio';
-import { ListControl } from './control/control-list';
-import { TableControl } from './control/control-table';
-import { FileControl } from './control/control-file';
+import { ControlBase,
+         FormNControls,
+         TextboxControl,
+         DropdownControl,
+         RadioControl,
+         FileControl,
+         ListControl,
+         TableControl } from './control/control-base';
 
 @Injectable()
 export class DocFormService {
   constructor(private fb: FormBuilder, private http: HttpClient) { }
 
-  getFormSchema(appName: string) {
+  getFormNControls(appName: string): Promise<FormNControls> {
     return new Promise((resolve, reject) => {
       const container = 'schema';
-      this.http.get(`/api/document/download?c=${container}&p=${appName}.JSON`).subscribe(res => {
-        resolve(res);
+      this.http.get(`/api/document/download?c=${container}&p=${appName}.JSON`).subscribe((res: any) => {
+        const data: FormNControls = this.generateFormNControls(res.schema);
+        resolve(data);
       });
     });
   }
 
-  castSchema2Controls(schema: any): ControlBase[] {
-    console.log(schema);
-    const controls: ControlBase[] = Object.keys(schema).map((eln) => {
-      const opt = <ControlBase>schema[eln];
+  generateFormNControls(schema: any): FormNControls {
+    const form: any = {};
+    const controls: ControlBase[] = [];
+
+    Object.keys(schema).map((el) => {
+      const opt = <ControlBase>schema[el];
+
       if (opt.controlType === 'textbox') {
-        return new TextboxControl(eln, opt);
+        form[el] = [(opt.value || ''), (opt.required ? [Validators.required] : [])];
+        controls.push(new TextboxControl(el, opt));
       } else if (opt.controlType === 'dropdown') {
-        return new DropdownControl(eln, opt);
+        form[el] = [(opt.value || ''), (opt.required ? [Validators.required] : [])];
+        controls.push(new DropdownControl(el, opt));
       } else if (opt.controlType === 'radio') {
-        return new RadioControl(eln, opt);
+        form[el] = [(opt.value || ''), (opt.required ? [Validators.required] : [])];
+        controls.push(new RadioControl(el, opt));
       } else if (opt.controlType === 'table') {
-        console.log(opt.schema[0]);
-        const xyz: ControlBase[] = this.castSchema2Controls(opt.schema[0]);
+        form[el] = [(opt.value || ''), (opt.required ? [Validators.required] : [])];
+        // console.log(opt.schema[0]);
+        const child: FormNControls = this.generateFormNControls(opt.schema[0]);
         opt.schema = [];
-        opt.schema.push(xyz);
-        return new TableControl(eln, opt);
+        opt.schema.push(child.controls);
+        controls.push(new TableControl(el, opt));
+
+        const tbl: any[] = this.initTable(opt.schema);
+        form[el] = this.fb.array(tbl);
+
       } else if (opt.controlType === 'list') {
-        return new ListControl(eln, opt);
+        form[el] = [(opt.value || ''), (opt.required ? [Validators.required] : [])];
+        controls.push(new ListControl(el, opt));
       } else if (opt.controlType === 'file') {
-        return new FileControl(eln, opt);
+        form[el] = [(opt.value || ''), (opt.required ? [Validators.required] : [])];
+        controls.push(new FileControl(el, opt));
       }
     });
 
-    return controls.sort((a, b) => a.order - b.order);
-  }
-
-  toFromGroup(controls: ControlBase[]) {
-    const obj: any = {};
-    controls.forEach(ctrl => {
-      if (['textbox', 'dropdown', 'radio', 'file'].includes(ctrl.controlType)) {
-        obj[ctrl.key] = [(ctrl.value || ''), (ctrl.required ? [Validators.required] : [])];
-
-        if (ctrl.childForm) {
-          obj[ctrl.childForm.key] = this.toFromGroup(ctrl.childForm.schema);
-        }
-
-        if (ctrl.childTable) {
-          const tbl: any[] = this.initTable(ctrl.childTable.schema);
-          obj[ctrl.childTable.key] = this.fb.array(tbl);
-        }
-      } else if (ctrl.controlType === 'table') {
-        const tbl: any[] = this.initTable(ctrl.schema);
-        obj[ctrl.key] = this.fb.array(tbl);
-      } else if (ctrl.controlType === 'list') {
-        const list: any[] = this.initList(ctrl.value);
-      }
-
-    });
-    return this.fb.group(obj);
+    return new FormNControls(this.fb.group(form), controls.sort((a, b) => a.order - b.order));
   }
 
   initList(obj: Array<string>) {
@@ -80,9 +70,9 @@ export class DocFormService {
     return returnArray;
   }
 
-  initTable(obj: any[]) {
+  initTable(obj: Array<ControlBase[]>) {
     const returnarray: FormGroup[] = [];
-    obj.forEach(row => {
+    obj.forEach((row: ControlBase[]) => {
       const line: any = {};
       row.forEach((el) => {
         line[el.key] = [(el.value || ''), (el.required ? [Validators.required] : [])];

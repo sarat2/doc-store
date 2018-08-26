@@ -4,7 +4,6 @@ import {
   FormGroup, Validators, FormArray
 } from '@angular/forms';
 import { ControlBase } from './control-base';
-import { TableControl } from './control-table';
 
 @Component({
   selector: 'app-control',
@@ -38,21 +37,22 @@ export class ControlComponent {
   checkValue(value: string) {
     if (this.ctrl.downstreamCtrl) {
       this.ctrl.downstreamCtrl.forEach(el => {
-        const ctrl = this.form.get(el.name);
+        const child = this.form.get(el.name);
         if (el.onValue === value) {
-          if (ctrl.enabled !== el.enable) {
+          if (child.enabled !== el.enable) {
             if (!el.enable) {
-              ctrl.setValue('');
-              ctrl.disable();
+              child.setValue('');
+              child.disable();
             } else {
-              ctrl.enable();
+              child.enable();
             }
           }
         } else {
           if (el.enable) {
-            ctrl.disable();
+            child.setValue('');
+            child.disable();
           } else {
-            ctrl.enable();
+            child.enable();
           }
         }
       });

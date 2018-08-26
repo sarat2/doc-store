@@ -1,7 +1,7 @@
 import { Component, Input, Output, EventEmitter, OnInit, OnChanges, SimpleChanges, SimpleChange } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 
-import { ControlBase } from './control/control-base';
+import { ControlBase, FormNControls } from './control/control-base';
 import { DocFormService } from './doc-form.service';
 
 @Component({
@@ -31,21 +31,58 @@ export class DocFormComponent implements OnChanges, OnInit {
 
   loadAppForm() {
     if (this.appName) {
-      this.svc.getFormSchema(this.appName).then((data: any) => {
-        this.ctrls = this.svc.castSchema2Controls(data.schema);
-        this.form = this.svc.toFromGroup(this.ctrls);
-        // console.log(this.form);
+      this.svc.getFormNControls(this.appName).then((data: FormNControls) => {
+        this.ctrls = data.controls;
+        this.form = data.form;
         this.isFormAvailable = true;
+        // console.log(data);
+        // const nv: any = {
+        //   'appKey': 'Teja',
+        //   'startDate': '',
+        //   'endDate': '',
+        //   'vendor': 'Test INC',
+        //   'category': 'Proposal',
+        //   'subCategory': '',
+        //   'docName': '',
+        //   'addresses': [
+        //     {
+        //       'street': '140 Prospect',
+        //       'city': '',
+        //       'state': '',
+        //       'zip': '',
+        //     },
+        //     {
+        //       'street': 'River rd',
+        //       'city': '',
+        //       'state': '',
+        //       'zip': '',
+        //     }]
+        // };
+        // this.form.patchValue(nv);
+
+        // this.form.get('addresses').setValue([
+        //   {
+        //     'street': '140 Prospect',
+        //     'city': '',
+        //     'state': '',
+        //     'zip': '',
+        //   },
+        //   {
+        //     'street': 'River rd',
+        //     'city': '',
+        //     'state': '',
+        //     'zip': '',
+        //   }]);
       });
     }
   }
 
   onSubmit() {
     this.metadata = JSON.stringify(this.form.getRawValue(), null, 4);
-    this.notify.emit({
-      metadata: this.form.getRawValue(),
-      file: this.file
-    });
+    // this.notify.emit({
+    //   metadata: this.form.getRawValue(),
+    //   file: this.file
+    // });
   }
 
   onNotify(event) {
