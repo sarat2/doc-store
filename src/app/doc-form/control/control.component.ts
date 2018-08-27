@@ -101,7 +101,7 @@ export class ControlComponent {
     const file: File = <File>event.target.files[0];
     this.ctrl.value = file.name;
     this.notify.emit(file);
-  }
+  };
 
 }
 
