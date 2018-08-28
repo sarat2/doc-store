@@ -19,7 +19,7 @@ export class ControlBase {
   }>;
   childForm?: ChildForm;
   childTable?: ChildTable;
-  schema?: Array<ControlBase[]>;
+
 
   constructor(key: string, options: {} = {}) {
     this.key = key || '';
@@ -33,7 +33,6 @@ export class ControlBase {
     this.downstreamCtrl = options['downstreamCtrl'] || null;
     this.childForm = options['childForm'] || null;
     this.childTable = options['childTable'] || null;
-    this.schema = options['schema'] || null;
   }
 }
 
@@ -94,13 +93,28 @@ export class FileControl extends ControlBase {
 }
 
 export class ListControl extends ControlBase {
+  placeholder: string;
+
   constructor(key: string, options: {} = {}) {
     super(key, options);
+    this.placeholder = options['placeholder'] || '';
   }
 }
 
 export class TableControl extends ControlBase {
+  schema: Array<ControlBase[]>;
+
   constructor(key: string, options: {} = {}) {
       super(key, options);
+      this.schema = options['schema'] || null;
+  }
+}
+
+export class FormCtrl extends ControlBase {
+  schema: ControlBase[];
+
+  constructor(key: string, options: {} = {}) {
+      super(key, options);
+      this.schema = options['schema'] || null;
   }
 }

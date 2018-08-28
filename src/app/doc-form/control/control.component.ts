@@ -89,10 +89,10 @@ export class ControlComponent {
         this.ctrl.childTable.schema.splice(i, 1);
       }
     } else {
-      if (this.ctrl.schema.length !== 1) {
+      if (this.ctrl['schema'].length !== 1) {
         control = <FormArray>(this.form.controls[this.ctrl.key]);
         control.removeAt(i);
-        this.ctrl.schema.splice(i, 1);
+        this.ctrl['schema'].splice(i, 1);
       }
     }
   }
@@ -101,7 +101,17 @@ export class ControlComponent {
     const file: File = <File>event.target.files[0];
     this.ctrl.value = file.name;
     this.notify.emit(file);
-  };
+  }
+
+  addListItem() {
+    // const list: FormArray = <FormArray>this.form.controls[this.ctrl.key];
+    // list.push(new FormControl(null));
+    (<FormArray>this.form.controls[this.ctrl.key]).push(new FormControl(null));
+  }
+  removeListItem(index) {
+    (<FormArray>this.form.controls[this.ctrl.key]).removeAt(index);
+  }
+
 
 }
 
