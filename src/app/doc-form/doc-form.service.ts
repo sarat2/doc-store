@@ -33,7 +33,8 @@ export class DocFormService {
             'placeholder': 'UniqueID of a Contract in Procurement application',
             'type': 'text',
             'order': 0,
-            'width': 6
+            'width': 6,
+            'row': 1
           },
           'startDate': {
             'controlType': 'textbox',
@@ -41,7 +42,8 @@ export class DocFormService {
             'placeholder': 'Contract Start Date',
             'type': 'date',
             'order': 3,
-            'width': 3
+            'width': 3,
+            'row': 2
           },
           'endDate': {
             'controlType': 'textbox',
@@ -49,7 +51,8 @@ export class DocFormService {
             'placeholder': 'Contract End Date',
             'type': 'date',
             'order': 4,
-            'width': 3
+            'width': 3,
+            'row': 2
           },
           'vendor': {
             'controlType': 'textbox',
@@ -57,7 +60,8 @@ export class DocFormService {
             'placeholder': 'Vendor Name',
             'type': 'text',
             'order': 5,
-            'width': 12
+            'width': 6,
+            'row': 3
           },
           'category': {
             'controlType': 'dropdown',
@@ -83,6 +87,7 @@ export class DocFormService {
             ],
             'order': 6,
             'width': 3,
+            'row': 4,
             'downstreamCtrl': [
               {
                 'name': 'subCategory',
@@ -106,7 +111,8 @@ export class DocFormService {
               }
             ],
             'order': 7,
-            'width': 3
+            'width': 3,
+            'row': 4
           },
           'docName': {
             'controlType': 'file',
@@ -114,7 +120,8 @@ export class DocFormService {
             'placeholder': 'Select Document',
             'file': null,
             'order': 8,
-            'width': 7
+            'width': 6,
+            'row': 4
           },
           'tags': {
             'controlType': 'list',
@@ -122,7 +129,32 @@ export class DocFormService {
             'type': 'text',
             'placeholder': 'Tags',
             'order': 8,
-            'width': 4
+            'width': 6,
+            'row': 5
+          },
+          'married': {
+            'controlType': 'radio',
+            'label': 'Married',
+            'type': 'radio',
+            'options': [
+              {
+                'key': 'Yes',
+                'value': true
+              },
+              {
+                'key': 'No',
+                'value': false
+              }
+            ],
+            downstreamCtrl: [{
+              'name': 'spouse',
+              'showOnlyOnValue': true,
+              'enable': true,
+              'onValue': true
+            }],
+            'order': 8,
+            'width': 4,
+            'row': 6
           },
           'spouse': {
             'controlType': 'form',
@@ -133,9 +165,10 @@ export class DocFormService {
                 'label': 'First Name',
                 'placeholder': 'First Name',
                 'type': 'text',
-                'required': true,
+                'required': false,
                 'order': 1,
-                'width': 6
+                'width': 6,
+                'row': 1
               },
               'lastName': {
                 'controlType': 'textbox',
@@ -143,7 +176,8 @@ export class DocFormService {
                 'placeholder': 'Last Name',
                 'type': 'text',
                 'order': 2,
-                'width': 6
+                'width': 6,
+                'row': 1
               },
               'tags': {
                 'controlType': 'list',
@@ -151,21 +185,24 @@ export class DocFormService {
                 'type': 'text',
                 'placeholder': 'Tags',
                 'order': 8,
-                'width': 4
+                'width': 4,
+                'row': 2
               },
               'addresses': {
                 'controlType': 'table',
                 'order': 9,
                 'width': 12,
+                'row': 3,
                 'schema': [{
                   'street': {
                     'controlType': 'textbox',
                     'label': 'Street',
                     'placeholder': 'Street',
                     'type': 'text',
-                    'required': true,
+                    'required': false,
                     'order': 1,
-                    'width': 2
+                    'width': 2,
+                    'row': 1
                   },
                   'city': {
                     'controlType': 'textbox',
@@ -174,7 +211,8 @@ export class DocFormService {
                     'type': 'text',
                     'required': false,
                     'order': 2,
-                    'width': 2
+                    'width': 2,
+                    'row': 1
                   },
                   'state': {
                     'controlType': 'textbox',
@@ -183,7 +221,8 @@ export class DocFormService {
                     'type': 'text',
                     'required': false,
                     'order': 3,
-                    'width': 2
+                    'width': 2,
+                    'row': 1
                   },
                   'zip': {
                     'controlType': 'textbox',
@@ -192,7 +231,8 @@ export class DocFormService {
                     'type': 'text',
                     'required': false,
                     'order': 4,
-                    'width': 2
+                    'width': 2,
+                    'row': 1
                   }
                 }]
               },
@@ -205,9 +245,10 @@ export class DocFormService {
                     'label': 'First Name',
                     'placeholder': 'First Name',
                     'type': 'text',
-                    'required': true,
+                    'required': false,
                     'order': 1,
-                    'width': 6
+                    'width': 6,
+                    'row': 1
                   },
                   'lastName': {
                     'controlType': 'textbox',
@@ -215,7 +256,8 @@ export class DocFormService {
                     'placeholder': 'Last Name',
                     'type': 'text',
                     'order': 2,
-                    'width': 6
+                    'width': 6,
+                    'row': 2
                   },
                   'tags': {
                     'controlType': 'list',
@@ -223,29 +265,34 @@ export class DocFormService {
                     'type': 'text',
                     'placeholder': 'Tags',
                     'order': 8,
-                    'width': 4
+                    'width': 4,
+                    'row': 3
                   }
                 },
                 'order': 8,
-                'width': 12
+                'width': 12,
+                'row': 4
               }
             },
             'order': 8,
-            'width': 12
+            'width': 6,
+            'row': 6
           },
           'addresses': {
             'controlType': 'table',
             'order': 9,
             'width': 12,
+            'row': 7,
             'schema': [{
               'street': {
                 'controlType': 'textbox',
                 'label': 'Street',
                 'placeholder': 'Street',
                 'type': 'text',
-                'required': true,
+                'required': false,
                 'order': 1,
-                'width': 2
+                'width': 2,
+                'row': 1
               },
               'city': {
                 'controlType': 'textbox',
@@ -254,7 +301,8 @@ export class DocFormService {
                 'type': 'text',
                 'required': false,
                 'order': 2,
-                'width': 2
+                'width': 2,
+                'row': 1
               },
               'state': {
                 'controlType': 'textbox',
@@ -263,7 +311,8 @@ export class DocFormService {
                 'type': 'text',
                 'required': false,
                 'order': 3,
-                'width': 2
+                'width': 2,
+                'row': 1
               },
               'zip': {
                 'controlType': 'textbox',
@@ -272,7 +321,8 @@ export class DocFormService {
                 'type': 'text',
                 'required': false,
                 'order': 4,
-                'width': 2
+                'width': 2,
+                'row': 1
               }
             }]
           }
@@ -280,7 +330,7 @@ export class DocFormService {
       };
 
       const data: FormNControls = this.generateFormNControls(res.schema);
-      console.log(data);
+      // console.log(data);
       resolve(data);
     });
   }
@@ -313,6 +363,7 @@ export class DocFormService {
         opt['schema'].push(child.controls);
         controls.push(new TableControl(el, opt));
 
+        // console.log(JSON.stringify(opt['schema']));
         const tbl: any[] = this.initTable(opt['schema']);
         form[el] = this.fb.array(tbl);
       } else if (opt.controlType === 'list') {
@@ -324,7 +375,17 @@ export class DocFormService {
       }
     });
 
-    return new FormNControls(this.fb.group(form), controls.sort((a, b) => a.order - b.order));
+    // console.log(controls.sort((a, b) => a.order - b.order));
+
+    const SortedNOrdered = <Array<ControlBase[]>>controls.sort((a, b) => a.order - b.order).reduce(function(groups, item) {
+      const val = item['row'];
+      groups[val] = groups[val] || [];
+      groups[val].push(item);
+      return groups;
+    }, {});
+    // console.log(SortedNOrdered);
+
+    return new FormNControls(this.fb.group(form), controls);
   }
 
   initTable(obj: Array<ControlBase[]>) {

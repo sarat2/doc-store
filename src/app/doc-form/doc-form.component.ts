@@ -12,7 +12,7 @@ import { DocFormService } from './doc-form.service';
 export class DocFormComponent implements OnChanges, OnInit {
   @Input() appName: string;
   @Output() notify: EventEmitter<Object> = new EventEmitter<Object>();
-  ctrls: ControlBase[] = [];
+  ctrls: Array<ControlBase[]> = [];
   form: FormGroup;
   isFormAvailable = false;
   // payLoad = '';
@@ -35,7 +35,7 @@ export class DocFormComponent implements OnChanges, OnInit {
         this.ctrls = data.controls;
         this.form = data.form;
         this.isFormAvailable = true;
-        console.log(data);
+        // console.log(data);
         // const nv: any = {
         //   'appKey': 'Teja',
         //   'startDate': '',

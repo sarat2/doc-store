@@ -4,6 +4,7 @@ export class ControlBase {
   controlType: string;
   order: number;
   width: number;
+  row: number;
   value: any;
   key: string;
   label: string;
@@ -15,6 +16,7 @@ export class ControlBase {
   downstreamCtrl?: Array<{
     name: string,
     enable: boolean,
+    show: boolean,
     onValue: any
   }>;
   childForm?: ChildForm;
@@ -29,6 +31,7 @@ export class ControlBase {
     this.order = options['order'] || 1;
     this.controlType = options['controlType'] || '';
     this.width = options['width'] || 0;
+    this.row = options['row'] || 0;
     this.showChild = options['showChild'] || null;
     this.downstreamCtrl = options['downstreamCtrl'] || null;
     this.childForm = options['childForm'] || null;
