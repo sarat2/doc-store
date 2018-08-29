@@ -158,7 +158,142 @@ export class DocFormService {
             'width': 4,
             'row': 6
           },
-          'spouse': {
+          'addresses': {
+            'controlType': 'table',
+            'order': 12,
+            'width': 12,
+            'row': 7,
+            'label': 'Address',
+            'schema': {
+              'street': {
+                'controlType': 'textbox',
+                'label': 'Street',
+                'placeholder': 'Street',
+                'type': 'text',
+                'required': false,
+                'order': 1,
+                'width': 2,
+                'row': 1
+              },
+              'city': {
+                'controlType': 'textbox',
+                'label': 'City',
+                'placeholder': 'City',
+                'type': 'text',
+                'required': false,
+                'order': 2,
+                'width': 2,
+                'row': 1
+              },
+              'state': {
+                'controlType': 'textbox',
+                'label': 'State',
+                'placeholder': 'State',
+                'type': 'text',
+                'required': false,
+                'order': 3,
+                'width': 2,
+                'row': 1
+              },
+              'zip': {
+                'controlType': 'textbox',
+                'label': 'Zip',
+                'placeholder': 'Zip',
+                'type': 'text',
+                'required': false,
+                'order': 4,
+                'width': 2,
+                'row': 1
+              }
+            }
+          }
+        }
+      };
+
+      const data: FormNControls = this.generateFormNControls(res.schema);
+      console.log(data);
+      resolve(data);
+    });
+  }
+
+  generateFormNControls(schema: any): FormNControls {
+    const form: any = {};
+    const controls: ControlBase[] = [];
+
+    Object.keys(schema).map((el) => {
+      const opt = <ControlBase>schema[el];
+
+      if (opt.controlType === 'textbox') {
+        form[el] = [(opt.value || ''), (opt.required ? [Validators.required] : [])];
+        controls.push(new TextboxControl(el, opt));
+      } else if (opt.controlType === 'dropdown') {
+        form[el] = [(opt.value || ''), (opt.required ? [Validators.required] : [])];
+        controls.push(new DropdownControl(el, opt));
+      } else if (opt.controlType === 'radio') {
+        form[el] = [(opt.value || ''), (opt.required ? [Validators.required] : [])];
+        controls.push(new RadioControl(el, opt));
+      } else if (opt.controlType === 'file') {
+        form[el] = [(opt.value || ''), (opt.required ? [Validators.required] : [])];
+        controls.push(new FileControl(el, opt));
+      } else if (opt.controlType === 'list') {
+        form[el] = this.fb.array([new FormControl((opt.value || ''), (opt.required ? [Validators.required] : []))]);
+        controls.push(new ListControl(el, opt));
+      } else if (opt.controlType === 'form') {
+        const child: FormNControls = this.generateFormNControls(opt['schema']);
+        opt['schema'] = child.controls;
+        controls.push(new FormCtrl(el, opt));
+
+        form[el] = child.form;
+      } else if (opt.controlType === 'table') {
+        const child: FormNControls = this.generateFormNControls(opt['schema']);
+        opt['schema'] = child.controls;
+        controls.push(new TableControl(el, opt));
+
+        const tbl: any[] = [child.form];
+        console.log(tbl);
+        form[el] = this.fb.array(tbl);
+      }
+    });
+
+    const groups = controls.reduce(function (group, item) {
+      const val = item['row'];
+      group[val] = group[val] || [];
+      group[val].push(item);
+      return group; // return with key (row number) and array
+    }, {});
+
+    const SortedNGrouped = <Array<ControlBase[]>>Object.keys(groups).map(function (group) {
+      return groups[group].sort((a, b) => a.order - b.order);
+    });
+
+    return new FormNControls(this.fb.group(form), SortedNGrouped);
+  }
+
+  initTable(obj: Array<ControlBase[]>) {
+    const returnarray: FormGroup[] = [];
+    obj.forEach((row: ControlBase[]) => {
+      const line: any = {};
+      row.forEach((el) => {
+        line[el.key] = [(el.value || ''), (el.required ? [Validators.required] : [])];
+      });
+      returnarray.push(this.fb.group(line));
+    });
+
+    return returnarray;
+  }
+
+  initForm(obj: ControlBase[]) {
+    const line: any = {};
+    obj.forEach((el) => {
+      line[el.key] = [(el.value || ''), (el.required ? [Validators.required] : [])];
+    });
+    return line;
+  }
+}
+
+
+/*
+'spouse': {
             'controlType': 'form',
             'label': 'Spouse',
             'schema': {
@@ -280,140 +415,4 @@ export class DocFormService {
             'width': 6,
             'row': 6
           },
-          'addresses': {
-            'controlType': 'table',
-            'order': 12,
-            'width': 12,
-            'row': 7,
-            'label': 'Address',
-            'schema': [{
-              'street': {
-                'controlType': 'textbox',
-                'label': 'Street',
-                'placeholder': 'Street',
-                'type': 'text',
-                'required': false,
-                'order': 1,
-                'width': 2,
-                'row': 1
-              },
-              'city': {
-                'controlType': 'textbox',
-                'label': 'City',
-                'placeholder': 'City',
-                'type': 'text',
-                'required': false,
-                'order': 2,
-                'width': 2,
-                'row': 1
-              },
-              'state': {
-                'controlType': 'textbox',
-                'label': 'State',
-                'placeholder': 'State',
-                'type': 'text',
-                'required': false,
-                'order': 3,
-                'width': 2,
-                'row': 1
-              },
-              'zip': {
-                'controlType': 'textbox',
-                'label': 'Zip',
-                'placeholder': 'Zip',
-                'type': 'text',
-                'required': false,
-                'order': 4,
-                'width': 2,
-                'row': 1
-              }
-            }]
-          }
-        }
-      };
-
-      const data: FormNControls = this.generateFormNControls(res.schema);
-      console.log(data);
-      resolve(data);
-    });
-  }
-
-  generateFormNControls(schema: any): FormNControls {
-    const form: any = {};
-    const controls: ControlBase[] = [];
-
-    Object.keys(schema).map((el) => {
-      const opt = <ControlBase>schema[el];
-
-      if (opt.controlType === 'textbox') {
-        form[el] = [(opt.value || ''), (opt.required ? [Validators.required] : [])];
-        controls.push(new TextboxControl(el, opt));
-      } else if (opt.controlType === 'dropdown') {
-        form[el] = [(opt.value || ''), (opt.required ? [Validators.required] : [])];
-        controls.push(new DropdownControl(el, opt));
-      } else if (opt.controlType === 'radio') {
-        form[el] = [(opt.value || ''), (opt.required ? [Validators.required] : [])];
-        controls.push(new RadioControl(el, opt));
-      } else if (opt.controlType === 'file') {
-        form[el] = [(opt.value || ''), (opt.required ? [Validators.required] : [])];
-        controls.push(new FileControl(el, opt));
-      } else if (opt.controlType === 'list') {
-        form[el] = this.fb.array([new FormControl((opt.value || ''), (opt.required ? [Validators.required] : []))]);
-        controls.push(new ListControl(el, opt));
-      } else if (opt.controlType === 'form') {
-        const child: FormNControls = this.generateFormNControls(opt['schema']);
-        opt['schema'] = child.controls;
-        controls.push(new FormCtrl(el, opt));
-
-        form[el] = child.form;
-      } else if (opt.controlType === 'table') {
-        const child: FormNControls = this.generateFormNControls(opt['schema'][0]);
-        // opt['schema'] = [];
-        // opt['schema'].push(child.controls);
-        opt['schema'] = child.controls;
-        controls.push(new TableControl(el, opt));
-
-        // console.log(JSON.stringify(opt['schema']));
-        const tbl: any[] = this.initTable(opt['schema']);
-        form[el] = this.fb.array(tbl);
-      }
-    });
-
-    // console.log(controls.sort((a, b) => a.order - b.order));
-
-    const groups = controls.reduce(function (group, item) {
-      const val = item['row'];
-      group[val] = group[val] || [];
-      group[val].push(item);
-      return group; // return with key (row number) and array
-    }, {});
-    // console.log(SortedNOrdered);
-
-    const SortedNGrouped = <Array<ControlBase[]>>Object.keys(groups).map(function (group) {
-      return groups[group].sort((a, b) => a.order - b.order);
-    });
-
-    return new FormNControls(this.fb.group(form), SortedNGrouped);
-  }
-
-  initTable(obj: Array<ControlBase[]>) {
-    const returnarray: FormGroup[] = [];
-    obj.forEach((row: ControlBase[]) => {
-      const line: any = {};
-      row.forEach((el) => {
-        line[el.key] = [(el.value || ''), (el.required ? [Validators.required] : [])];
-      });
-      returnarray.push(this.fb.group(line));
-    });
-
-    return returnarray;
-  }
-
-  initForm(obj: ControlBase[]) {
-    const line: any = {};
-    obj.forEach((el) => {
-      line[el.key] = [(el.value || ''), (el.required ? [Validators.required] : [])];
-    });
-    return line;
-  }
-}
+*/
