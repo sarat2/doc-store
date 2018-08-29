@@ -1,13 +1,15 @@
 <div *ngIf="isFormAvailable">
   <form (ngSubmit)="onSubmit()" [formGroup]="form">
     <div class="col-md-12 px-0">
-      <div class="row">
-        <!-- <ng-container *ngFor="let row of ctrls"> -->
-          <ng-container *ngFor="let ctrl of ctrls">
+      <ng-container *ngFor="let row of ctrls">
+        <div class="row">
+
+          <ng-container *ngFor="let ctrl of row">
             <app-control [ctrl]="ctrl" [form]="form" showlabel="true" class="form-group col-md-{{ctrl.width}}" (notify)="onNotify($event)"></app-control>
           </ng-container>
-        <!-- </ng-container> -->
-      </div>
+
+        </div>
+      </ng-container>
     </div>
 
     <button type="submit" [disabled]="!form.valid" class="btn btn-primary btn-md">Save & Upload</button>

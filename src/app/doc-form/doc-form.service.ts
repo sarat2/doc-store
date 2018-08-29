@@ -2,15 +2,17 @@ import { Injectable } from '@angular/core';
 import { FormBuilder, FormGroup, FormArray, FormControl, Validators } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 
-import { ControlBase,
-         FormNControls,
-         TextboxControl,
-         DropdownControl,
-         RadioControl,
-         FileControl,
-         ListControl,
-         TableControl,
-         FormCtrl } from './control/control-base';
+import {
+  ControlBase,
+  FormNControls,
+  TextboxControl,
+  DropdownControl,
+  RadioControl,
+  FileControl,
+  ListControl,
+  TableControl,
+  FormCtrl
+} from './control/control-base';
 
 @Injectable()
 export class DocFormService {
@@ -128,7 +130,7 @@ export class DocFormService {
             'label': 'Tags',
             'type': 'text',
             'placeholder': 'Tags',
-            'order': 8,
+            'order': 9,
             'width': 6,
             'row': 5
           },
@@ -152,7 +154,7 @@ export class DocFormService {
               'enable': true,
               'onValue': true
             }],
-            'order': 8,
+            'order': 10,
             'width': 4,
             'row': 6
           },
@@ -274,15 +276,16 @@ export class DocFormService {
                 'row': 4
               }
             },
-            'order': 8,
+            'order': 11,
             'width': 6,
             'row': 6
           },
           'addresses': {
             'controlType': 'table',
-            'order': 9,
+            'order': 12,
             'width': 12,
             'row': 7,
+            'label': 'Address',
             'schema': [{
               'street': {
                 'controlType': 'textbox',
@@ -330,7 +333,7 @@ export class DocFormService {
       };
 
       const data: FormNControls = this.generateFormNControls(res.schema);
-      // console.log(data);
+      console.log(data);
       resolve(data);
     });
   }
@@ -351,6 +354,12 @@ export class DocFormService {
       } else if (opt.controlType === 'radio') {
         form[el] = [(opt.value || ''), (opt.required ? [Validators.required] : [])];
         controls.push(new RadioControl(el, opt));
+      } else if (opt.controlType === 'file') {
+        form[el] = [(opt.value || ''), (opt.required ? [Validators.required] : [])];
+        controls.push(new FileControl(el, opt));
+      } else if (opt.controlType === 'list') {
+        form[el] = this.fb.array([new FormControl((opt.value || ''), (opt.required ? [Validators.required] : []))]);
+        controls.push(new ListControl(el, opt));
       } else if (opt.controlType === 'form') {
         const child: FormNControls = this.generateFormNControls(opt['schema']);
         opt['schema'] = child.controls;
@@ -359,33 +368,32 @@ export class DocFormService {
         form[el] = child.form;
       } else if (opt.controlType === 'table') {
         const child: FormNControls = this.generateFormNControls(opt['schema'][0]);
-        opt['schema'] = [];
-        opt['schema'].push(child.controls);
+        // opt['schema'] = [];
+        // opt['schema'].push(child.controls);
+        opt['schema'] = child.controls;
         controls.push(new TableControl(el, opt));
 
         // console.log(JSON.stringify(opt['schema']));
         const tbl: any[] = this.initTable(opt['schema']);
         form[el] = this.fb.array(tbl);
-      } else if (opt.controlType === 'list') {
-        form[el] = this.fb.array([new FormControl((opt.value || ''), (opt.required ? [Validators.required] : []))]);
-        controls.push(new ListControl(el, opt));
-      } else if (opt.controlType === 'file') {
-        form[el] = [(opt.value || ''), (opt.required ? [Validators.required] : [])];
-        controls.push(new FileControl(el, opt));
       }
     });
 
     // console.log(controls.sort((a, b) => a.order - b.order));
 
-    const SortedNOrdered = <Array<ControlBase[]>>controls.sort((a, b) => a.order - b.order).reduce(function(groups, item) {
+    const groups = controls.reduce(function (group, item) {
       const val = item['row'];
-      groups[val] = groups[val] || [];
-      groups[val].push(item);
-      return groups;
+      group[val] = group[val] || [];
+      group[val].push(item);
+      return group; // return with key (row number) and array
     }, {});
     // console.log(SortedNOrdered);
 
-    return new FormNControls(this.fb.group(form), controls);
+    const SortedNGrouped = <Array<ControlBase[]>>Object.keys(groups).map(function (group) {
+      return groups[group].sort((a, b) => a.order - b.order);
+    });
+
+    return new FormNControls(this.fb.group(form), SortedNGrouped);
   }
 
   initTable(obj: Array<ControlBase[]>) {

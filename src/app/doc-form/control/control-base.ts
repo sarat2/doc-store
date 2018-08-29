@@ -52,9 +52,9 @@ export class ChildTable {
 
 export class FormNControls {
   form: FormGroup;
-  controls: ControlBase[];
+  controls: Array<ControlBase[]>;
 
-  constructor(form: FormGroup, controls: ControlBase[]) {
+  constructor(form: FormGroup, controls: Array<ControlBase[]>) {
     this.form = form;
     this.controls = controls;
   }
