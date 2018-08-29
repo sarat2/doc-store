@@ -104,12 +104,14 @@ export class ControlComponent {
   }
 
   addListItem() {
-    // const list: FormArray = <FormArray>this.form.controls[this.ctrl.key];
-    // list.push(new FormControl(null));
-    (<FormArray>this.form.controls[this.ctrl.key]).push(new FormControl(null));
+    const list = <FormArray>this.form.controls[this.ctrl.key];
+    list.push(new FormControl(null));
   }
   removeListItem(index) {
-    (<FormArray>this.form.controls[this.ctrl.key]).removeAt(index);
+    const list = <FormArray>this.form.controls[this.ctrl.key];
+    if (list.length !== 1) {
+      list.removeAt(index);
+    }
   }
 
 
