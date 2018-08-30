@@ -193,7 +193,7 @@ export class DocFormService {
                 'required': false,
                 'order': 3,
                 'width': 2,
-                'row': 1
+                'row': 2
               },
               'zip': {
                 'controlType': 'textbox',
@@ -203,7 +203,7 @@ export class DocFormService {
                 'required': false,
                 'order': 4,
                 'width': 2,
-                'row': 1
+                'row': 2
               }
             }
           }

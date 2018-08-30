@@ -54,9 +54,9 @@
       <label [attr.for]="ctrl.key" *ngIf="showlabel">{{ctrl.label}}</label>
       <div class="divTable" [formArrayName]="ctrl.key">
         <div class="divTableBody">
-          <div class="divTableRow" *ngFor="let row of ctrl.schema; let i = index" [formGroupName]="i">
-            <div class="divTableCell" *ngFor="let item of row; let index = index">
-              <app-control [ctrl]="item" [form]="form.controls[ctrl.key].controls[i]" [showlabel]="(i==0)"></app-control>
+          <div class="divTableRow" *ngFor="let row of form.controls[ctrl.key].controls; let i = index" [formGroupName]="i">
+            <div class="divTableCell" *ngFor="let item of ctrl.schema[0]; let index = index">
+              <app-control [ctrl]="item" [form]="form.controls[ctrl.key].controls[i]" [showlabel]="(i==0)" class="col-md-{{item.width}}"></app-control>
             </div>
             <div class="divTableCell" style="vertical-align: bottom">
               <button type="button" class="btn btn-xs btn-default" (click)="removeChildTableRow(i)">&nbsp;-&nbsp;</button>
