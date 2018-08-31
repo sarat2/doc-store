@@ -51,24 +51,44 @@
 
     <!-- Table -->
     <ng-container *ngSwitchCase="'table'">
+
       <label [attr.for]="ctrl.key" *ngIf="showlabel">{{ctrl.label}}</label>
-      <div class="divTable" [formArrayName]="ctrl.key">
+      <button type="button" class="btn btn-xs btn-default" (click)="addChildTableRow()">&nbsp;+&nbsp;</button>
+      <!-- Tabular format -->
+      <div class="divTable" [formArrayName]="ctrl.key" *ngIf="ctrl.viewType === 'table'">
         <div class="divTableBody">
           <div class="divTableRow" *ngFor="let row of form.controls[ctrl.key].controls; let i = index" [formGroupName]="i">
             <div class="divTableCell" *ngFor="let item of ctrl.schema[0]; let index = index">
-              <app-control [ctrl]="item" [form]="form.controls[ctrl.key].controls[i]" [showlabel]="(i==0)" class="col-md-{{item.width}}"></app-control>
+              <app-control [ctrl]="item" [form]="row" [showlabel]="(i==0)"></app-control>
             </div>
             <div class="divTableCell" style="vertical-align: bottom">
               <button type="button" class="btn btn-xs btn-default" (click)="removeChildTableRow(i)">&nbsp;-&nbsp;</button>
             </div>
           </div>
-          <div class="divTableRow">
+          <!-- <div class="divTableRow">
             <div class="divTableCell">
               <button type="button" class="btn btn-xs btn-default" (click)="addChildTableRow()">&nbsp;+&nbsp;</button>
             </div>
-          </div>
+          </div> -->
         </div>
       </div>
+
+      <!-- Form format -->
+      <div class="col-md-12 px-0" [formArrayName]="ctrl.key" *ngIf="ctrl.viewType === 'form'">
+        <ng-container *ngFor="let row of form.controls[ctrl.key].controls; let i = index" [formGroupName]="i">
+          <ng-container *ngFor="let line of ctrl.schema">
+            <div class="row">
+              <ng-container *ngFor="let item of line">
+                <app-control [ctrl]="item" [form]="form.controls[ctrl.key].controls[i]" showlabel="true" class="form-group col-md-{{item.width}}"></app-control>
+              </ng-container>
+            </div>
+          </ng-container>
+          <div>
+              <button type="button" class="btn btn-xs btn-default" (click)="removeChildTableRow(i)">&nbsp;-&nbsp;</button>
+          </div>
+        </ng-container>
+      </div>
+
     </ng-container>
 
     <!-- Form -->
@@ -87,16 +107,5 @@
 
   </ng-container>
 
-  <!-- Child Form -->
-  <ng-container *ngIf="ctrl.childForm && (controlValue == ctrl.showChild.onValue || ctrl.showChild.always == true)">
-    <div class="col-md-12 px-0">
-      <div class="row">
-        <ng-container *ngFor="let child of ctrl.childForm.value">
-          <app-control [ctrl]="child" [form]="form.controls[ctrl.childForm.key]" showlabel="true" class="form-group col-md-{{child.width}}"></app-control>
-        </ng-container>
-      </div>
-    </div>
-  </ng-container>
-
-  <div class="errorMessage" *ngIf="enabled && !isValid">{{ctrl.label}} is required</div>
+  <div class="errorMessage" *ngIf="form.controls[ctrl.key].touched && !form.controls[ctrl.key].valid">{{ctrl.label}} is required</div>
 </ng-container>

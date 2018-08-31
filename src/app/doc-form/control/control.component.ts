@@ -18,9 +18,6 @@ export class ControlComponent {
   constructor(private fb: FormBuilder) {
   }
 
-  get isValid() {
-    return this.form.controls[this.ctrl.key].valid;
-  }
   get controlValue() {
     const control = this.form.controls[this.ctrl.key];
     if (control) {
@@ -61,40 +58,22 @@ export class ControlComponent {
 
   addChildTableRow() {
     const line: any = {};
-    let formArray: FormArray = null;
-    let newline: any = null;
-    let control: any = null;
-    if (this.ctrl.childTable) {
-      formArray = <FormArray>(this.form.controls[this.ctrl.childTable.key]);
-      control = this.ctrl.childTable;
-      newline = control.value[0];
-    } else {
-      formArray = <FormArray>(this.form.controls[this.ctrl.key]);
-      control = this.ctrl;
-      newline = control.schema[0];
-    }
-    newline.forEach((el) => {
-      line[el.key] = [(el.value || ''), (el.required ? [Validators.required] : [])];
+    const formArray: FormArray = <FormArray>(this.form.controls[this.ctrl.key]);
+    this.ctrl['schema'].forEach((el) => {
+      if (el instanceof Array) {
+        el.forEach((cel) => {
+          line[cel.key] = [(cel.value || ''), (cel.required ? [Validators.required] : [])];
+        });
+      } else {
+        line[el.key] = [(el.value || ''), (el.required ? [Validators.required] : [])];
+      }
     });
     formArray.push(this.fb.group(line));
-    control.schema.push(newline);
   }
 
   removeChildTableRow(i: number) {
-    let control: any = null;
-    if (this.ctrl.childTable) {
-      if (this.ctrl.childTable.schema.length !== 1) {
-        control = <FormArray>(this.form.controls[this.ctrl.childTable.key]);
-        control.removeAt(i);
-        this.ctrl.childTable.schema.splice(i, 1);
-      }
-    } else {
-      if (this.ctrl['schema'].length !== 1) {
-        control = <FormArray>(this.form.controls[this.ctrl.key]);
-        control.removeAt(i);
-        this.ctrl['schema'].splice(i, 1);
-      }
-    }
+    const formArray: FormArray = <FormArray>(this.form.controls[this.ctrl.key]);
+    formArray.removeAt(i);
   }
 
   onFileSelected(event) {
@@ -114,7 +93,6 @@ export class ControlComponent {
       list.removeAt(index);
     }
   }
-
 
 }
 

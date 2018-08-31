@@ -34,6 +34,7 @@ export class DocFormService {
             'label': 'App Key #',
             'placeholder': 'UniqueID of a Contract in Procurement application',
             'type': 'text',
+            'required': true,
             'order': 0,
             'width': 6,
             'row': 1
@@ -160,6 +161,7 @@ export class DocFormService {
           },
           'addresses': {
             'controlType': 'table',
+            'viewType': 'form',
             'order': 12,
             'width': 12,
             'row': 7,
@@ -172,7 +174,7 @@ export class DocFormService {
                 'type': 'text',
                 'required': false,
                 'order': 1,
-                'width': 2,
+                'width': 3,
                 'row': 1
               },
               'city': {
@@ -182,7 +184,7 @@ export class DocFormService {
                 'type': 'text',
                 'required': false,
                 'order': 2,
-                'width': 2,
+                'width': 3,
                 'row': 1
               },
               'state': {
@@ -192,8 +194,8 @@ export class DocFormService {
                 'type': 'text',
                 'required': false,
                 'order': 3,
-                'width': 2,
-                'row': 2
+                'width': 3,
+                'row': 1
               },
               'zip': {
                 'controlType': 'textbox',
@@ -202,7 +204,7 @@ export class DocFormService {
                 'type': 'text',
                 'required': false,
                 'order': 4,
-                'width': 2,
+                'width': 3,
                 'row': 2
               }
             }

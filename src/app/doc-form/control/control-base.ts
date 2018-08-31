@@ -106,10 +106,12 @@ export class ListControl extends ControlBase {
 
 export class TableControl extends ControlBase {
   schema: Array<ControlBase[]>;
+  viewType: string;
 
   constructor(key: string, options: {} = {}) {
       super(key, options);
       this.schema = options['schema'] || null;
+      this.viewType = options['viewType'] || null;
   }
 }
 
