@@ -3,10 +3,10 @@
   <ng-container [ngSwitch]="ctrl.controlType">
     <ng-container *ngSwitchCase="'textbox'">
       <label [attr.for]="ctrl.key" *ngIf="showlabel">{{ctrl.label}}</label>
-      <input class="form-control" [id]="ctrl.key" [type]="ctrl.type" [placeholder]="ctrl.placeholder" [formControlName]="ctrl.key"
+      <input class="form-control holo" [id]="ctrl.key" [type]="ctrl.type" [placeholder]="ctrl.placeholder" [formControlName]="ctrl.key"
         (change)="checkValue($event)" />
     </ng-container>
-
+    
     <ng-container *ngSwitchCase="'dropdown'">
       <label [attr.for]="ctrl.key" *ngIf="showlabel">{{ctrl.label}}</label>
       <select class="form-control" [id]="ctrl.key" [formControlName]="ctrl.key" (change)="checkValue($event.target.value)">
